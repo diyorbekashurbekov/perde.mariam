@@ -7,6 +7,7 @@ import { business, heroPhotos } from "@/data"
 import { useIntroDone } from "@/lib/intro"
 import { isLightDevice } from "@/lib/device"
 import { openCatalog, track } from "@/lib/analytics"
+import { generalLink } from "@/lib/whatsapp"
 
 // 3D перде бөлек жүктеледі — сайттың алғашқы ашылуы ауырламас үшін.
 const Curtain3D = lazy(() => import("@/components/Curtain3D"))
@@ -52,9 +53,9 @@ function ArchSlideshow() {
     <AnimatePresence initial={false}>
       <motion.img
         key={heroPhotos[i]}
-        src={heroPhotos[i]}
-        srcSet={`${heroPhotos[i].replace(".webp", "-480.webp")} 480w, ${heroPhotos[i].replace(".webp", "-900.webp")} 900w, ${heroPhotos[i]} 1400w`}
         sizes="(max-width: 640px) 60vw, 420px"
+        srcSet={`${heroPhotos[i].replace(".webp", "-480.webp")} 480w, ${heroPhotos[i].replace(".webp", "-900.webp")} 900w, ${heroPhotos[i]} 1400w`}
+        src={heroPhotos[i]}
         alt="Perde Mariam тіккен перде, интерьерде"
         className="absolute inset-0 h-full w-full object-cover"
         initial={{ opacity: 0, scale: 1.18 }}
@@ -147,7 +148,7 @@ export function Hero() {
           <div className="flex flex-wrap justify-center gap-3">
             <Magnetic intensity={0.2} range={120}>
               <a
-                href={business.whatsapp}
+                href={generalLink()}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => track("whatsapp_click", { source: "hero" })}

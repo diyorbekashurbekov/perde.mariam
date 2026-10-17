@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react"
 import { Menu, X } from "lucide-react"
-import { business } from "@/data"
 import { openCatalog, track } from "@/lib/analytics"
+import { generalLink } from "@/lib/whatsapp"
 import { cn } from "@/lib/utils"
 
 const links = [
@@ -46,7 +46,7 @@ export function Nav() {
         </nav>
         <div className="flex items-center gap-3">
           <a
-            href={business.whatsapp}
+            href={generalLink()}
             onClick={() => track("whatsapp_click", { source: "nav" })}
             target="_blank"
             rel="noreferrer"

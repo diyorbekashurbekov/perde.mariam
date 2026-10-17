@@ -39,9 +39,9 @@ export function ZoomReveal() {
     <section ref={ref} aria-label="Перде әлемі" className="relative h-[240vh] sm:h-[280vh]">
       <div className="sticky top-0 h-svh overflow-hidden">
         <motion.img
-          src={PHOTO}
-          srcSet={`${PHOTO.replace(".webp", "-900.webp")} 900w, ${PHOTO} 1400w`}
           sizes="100vw"
+          srcSet={`${PHOTO.replace(".webp", "-900.webp")} 900w, ${PHOTO} 1400w`}
+          src={PHOTO}
           alt="Perde Mariam тіккен перделер, қонақ бөлмеде"
           loading="lazy"
           decoding="async"

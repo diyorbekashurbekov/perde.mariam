@@ -5,6 +5,7 @@ import { ClothCanvas, type RGB } from "@/components/ClothCanvas"
 import { Magnetic } from "@/components/ui/magnetic"
 import { business } from "@/data"
 import { track } from "@/lib/analytics"
+import { generalLink } from "@/lib/whatsapp"
 
 const EMERALD: RGB = [40, 88, 72]
 const ease = [0.22, 1, 0.36, 1] as const
@@ -47,7 +48,7 @@ export function Contact() {
             <div className="flex flex-wrap gap-3">
               <Magnetic intensity={0.2} range={140}>
                 <a
-                  href={business.whatsapp}
+                  href={generalLink()}
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => track("whatsapp_click", { source: "contact" })}

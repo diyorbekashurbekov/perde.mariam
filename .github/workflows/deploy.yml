@@ -26,6 +26,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          # Аналитика ID-лері: GitHub → Settings → Secrets and variables → Actions → Variables.
+          # Бос болса, аналитика қосылмайды.
+          VITE_GA4_ID: ${{ vars.GA4_ID }}
+          VITE_META_PIXEL_ID: ${{ vars.META_PIXEL_ID }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

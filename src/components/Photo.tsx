@@ -65,9 +65,10 @@ export function Photo({ src, alt, sizes = "100vw", priority, className }: PhotoP
   return (
     <img
       ref={ref}
-      src={near ? src : BLANK}
-      srcSet={near && m ? `${base}-480.webp 480w, ${base}-900.webp 900w, ${src} ${m.w}w` : undefined}
+      // Ретіне мән бар: Safari src-ті srcset-тен бұрын алса, үлкен (1400 px) нұсқаны да жүктеп қояды.
       sizes={near && m ? sizes : undefined}
+      srcSet={near && m ? `${base}-480.webp 480w, ${base}-900.webp 900w, ${src} ${m.w}w` : undefined}
+      src={near ? src : BLANK}
       width={m?.w}
       height={m?.h}
       alt={alt}

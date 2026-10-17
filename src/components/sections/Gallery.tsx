@@ -124,9 +124,9 @@ export function Gallery() {
             <AnimatePresence mode="wait">
               <motion.img
                 key={gallery[open].src}
-                src={gallery[open].src}
-                srcSet={`${gallery[open].src.replace(".webp", "-900.webp")} 900w, ${gallery[open].src} 1400w`}
                 sizes="90vw"
+                srcSet={`${gallery[open].src.replace(".webp", "-900.webp")} 900w, ${gallery[open].src} 1400w`}
+                src={gallery[open].src}
                 alt={gallery[open].alt}
                 className="relative max-h-[70vh] max-w-[88vw] rounded-[18px] object-contain shadow-2xl sm:max-h-[74vh]"
                 initial={{ opacity: 0, scale: 0.94, y: 20 }}
