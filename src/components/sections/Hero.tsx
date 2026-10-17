@@ -5,6 +5,7 @@ import { ClothCanvas, type RGB } from "@/components/ClothCanvas"
 import { Magnetic } from "@/components/ui/magnetic"
 import { business, heroPhotos } from "@/data"
 import { useIntroDone } from "@/lib/intro"
+import { isLightDevice } from "@/lib/device"
 
 // 3D перде бөлек жүктеледі — сайттың алғашқы ашылуы ауырламас үшін.
 const Curtain3D = lazy(() => import("@/components/Curtain3D"))
@@ -84,7 +85,10 @@ export function Hero() {
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] })
   const p = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.4 })
-  const [use3D] = useState(canUse3D)
+  // Доғадағы WebGL жеңіл — телефонда да жұмыс істейді. Ал 3D перде ауыр, сондықтан тек компьютерде;
+  // телефонда (әсіресе iPhone Safari-де) оның орнына жеңіл 2D тірі мата.
+  const [useGL] = useState(canUse3D)
+  const [use3D] = useState(() => canUse3D() && !isLightDevice())
   const introDone = useIntroDone()
 
   const panelScale = useTransform(p, [0, 0.62], [1, 0.14])
@@ -107,7 +111,7 @@ export function Hero() {
             className="absolute top-[10vh] left-1/2 h-[70vh] w-[70vw] -translate-x-1/2 rounded-full bg-sand/70 blur-[120px]"
           />
           <div className="absolute top-[13vh] left-1/2 h-[34vh] sm:h-[58vh] w-[min(420px,58vw)] -translate-x-1/2 overflow-hidden rounded-t-full bg-linen-deep shadow-[0_60px_120px_-60px_rgba(30,26,22,0.5)]">
-            {use3D ? (
+            {useGL ? (
               <Suspense fallback={<ArchSlideshow />}>
                 <ArchGL photos={heroPhotos} />
               </Suspense>

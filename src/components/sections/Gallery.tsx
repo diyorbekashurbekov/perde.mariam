@@ -65,7 +65,7 @@ export function Gallery() {
                 <Photo
                   src={g.src}
                   alt={g.alt}
-                  sizes="(max-width: 1024px) 50vw, 33vw"
+                  sizes="(max-width: 640px) 160px, (max-width: 1024px) 50vw, 33vw"
                   className="block h-auto transition-transform duration-[1.2s] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04]"
                 />
               </button>
@@ -74,7 +74,7 @@ export function Gallery() {
                 href={choosePhotoLink(g.src)}
                 target="_blank"
                 rel="noreferrer"
-                className="absolute inset-x-2 bottom-2 inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-paper/92 px-2.5 text-[11px] font-normal text-ink shadow-[0_8px_24px_-10px_rgba(30,26,22,0.6)] backdrop-blur-sm transition-colors hover:bg-gold sm:inset-x-auto sm:bottom-4 sm:left-4 sm:h-11 sm:gap-2 sm:px-5 sm:text-sm"
+                className="absolute inset-x-2 bottom-2 inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-paper px-2.5 text-[11px] font-normal text-ink shadow-[0_8px_24px_-10px_rgba(30,26,22,0.6)] transition-colors hover:bg-gold sm:inset-x-auto sm:bottom-4 sm:left-4 sm:h-11 sm:gap-2 sm:px-5 sm:text-sm"
               >
                 <MessageCircle className="size-4 shrink-0 text-sage" strokeWidth={1.8} aria-hidden />
                 Үйіме де осындай

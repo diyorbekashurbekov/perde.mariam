@@ -1,4 +1,5 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import { isLightDevice } from "@/lib/device"
 import { photoKey } from "@/components/Photo"
 import meta from "@/photoMeta.json"
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react"
@@ -14,6 +15,10 @@ export function ZoomReveal() {
   const p = useSpring(scrollYProgress, { stiffness: 90, damping: 28, mass: 0.4 })
 
   const textScale = useTransform(p, [0, 0.72], [1, 16])
+  // Телефонда (iPhone Safari) SVG маска әр кадрда қайта салынып ауыр болады — орнына
+  // бір рет салынатын «background-clip: text» әрпін GPU арқылы үлкейтеміз.
+  const [light] = useState(isLightDevice)
+  const lightScale = useTransform(p, [0, 0.72], [1, 9])
   const veil = useTransform(p, [0.5, 0.78], [1, 0])
   const photoScale = useTransform(p, [0, 1], [1.3, 1])
   const hintOpacity = useTransform(p, [0, 0.12], [1, 0])
@@ -45,6 +50,25 @@ export function ZoomReveal() {
         />
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/70 to-transparent" />
 
+        {light ? (
+          <motion.div aria-hidden style={{ opacity: veil }} className="absolute inset-0 flex items-center justify-center bg-linen">
+            <motion.span
+              style={{
+                scale: lightScale,
+                backgroundImage: `url(${PHOTO.replace(".webp", "-900.webp")})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+                willChange: "transform",
+              }}
+              className="font-serif text-[27vw] leading-none font-normal tracking-[-0.04em]"
+            >
+              ПЕРДЕ
+            </motion.span>
+          </motion.div>
+        ) : (
         <motion.svg aria-hidden style={{ opacity: veil }} className="absolute inset-0 h-full w-full">
           <defs>
             <mask id="zoom-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
@@ -70,6 +94,7 @@ export function ZoomReveal() {
           </defs>
           <rect width="100%" height="100%" fill="#f7f1e8" mask="url(#zoom-mask)" />
         </motion.svg>
+        )}
 
         <motion.p
           style={{ opacity: hintOpacity }}

@@ -74,6 +74,11 @@ export default function ArchGL({ photos }: ArchGLProps) {
     renderer.outputColorSpace = THREE.LinearSRGBColorSpace
     renderer.domElement.style.cssText = "display:block;width:100%;height:100%;opacity:0;transition:opacity 1.2s ease"
     mount.appendChild(renderer.domElement)
+    // Телефон видеокартаны тартып алса (context lost) — канвасты жасырамыз, бет қатпайды.
+    renderer.domElement.addEventListener("webglcontextlost", (e) => {
+      e.preventDefault()
+      renderer.domElement.style.opacity = "0"
+    })
 
     const scene = new THREE.Scene()
     const camera = new THREE.Camera()
