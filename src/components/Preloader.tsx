@@ -38,7 +38,11 @@ export function Preloader() {
     const controls = animate(count, 100, { duration: 1.2, ease: [0.65, 0, 0.35, 1] })
     // Қаріптерді ең көбі 1,2 с күтеміз — баяу интернетте кіріспе созылып кетпесін.
     const fonts = Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1200))])
-    Promise.all([controls.finished, fonts, preloadHero()]).then(() => setStage("open"))
+    // Перде ашыла бастаған сәтте-ақ hero тақырыбы шыға береді (күтпейді).
+    Promise.all([controls.finished, fonts, preloadHero()]).then(() => {
+      setStage("open")
+      finishIntro()
+    })
     return () => controls.stop()
   }, [stage, count])
 

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react"
-import { AnimatePresence, motion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react"
+import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring, useTransform, type MotionValue } from "motion/react"
 import { ArrowDown, MessageCircle } from "lucide-react"
 import { ClothCanvas, type RGB } from "@/components/ClothCanvas"
 import { Magnetic } from "@/components/ui/magnetic"
@@ -73,7 +73,7 @@ function RevealLine({ children, delay, className }: { children: string; delay: n
         className={`block ${className ?? ""}`}
         initial={{ y: "110%" }}
         animate={ready ? { y: "0%" } : { y: "110%" }}
-        transition={{ duration: 1.3, ease, delay }}
+        transition={{ duration: 1.05, ease, delay }}
       >
         {children}
       </motion.span>
@@ -90,6 +90,18 @@ export function Hero() {
   const [useGL] = useState(canUse3D)
   const [use3D] = useState(() => canUse3D() && !isLightDevice())
   const introDone = useIntroDone()
+
+  // WebGL (Three.js) ауыр: оны тақырып анимациясымен бір уақытта емес, адам скролл бастағанда
+  // (доға сонда ғана көрінеді) немесе 4 с тыныштықтан кейін ғана жүктейміз.
+  const [armGL, setArmGL] = useState(false)
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    if (v > 0.02) setArmGL(true)
+  })
+  useEffect(() => {
+    if (!introDone) return
+    const t = setTimeout(() => setArmGL(true), 4000)
+    return () => clearTimeout(t)
+  }, [introDone])
 
   const panelScale = useTransform(p, [0, 0.62], [1, 0.14])
   const titleY = useTransform(p, [0, 0.35], ["0vh", "-18vh"])
@@ -111,8 +123,8 @@ export function Hero() {
             className="absolute top-[10vh] left-1/2 h-[70vh] w-[70vw] -translate-x-1/2 rounded-full bg-sand/70 blur-[120px]"
           />
           <div className="absolute top-[13vh] left-1/2 h-[34vh] sm:h-[58vh] w-[min(420px,58vw)] -translate-x-1/2 overflow-hidden rounded-t-full bg-linen-deep shadow-[0_60px_120px_-60px_rgba(30,26,22,0.5)]">
-            {/* WebGL-ді (Three.js) кіріспе біткен соң ғана жүктейміз — алғашқы секундтарда телефон процессоры бос болсын */}
-            {useGL && introDone ? (
+            {/* WebGL доғасы — скролл басталғанда ғана (жоғарыдағы armGL) */}
+            {useGL && armGL ? (
               <Suspense fallback={<ArchSlideshow />}>
                 <ArchGL photos={heroPhotos} />
               </Suspense>
@@ -169,14 +181,14 @@ export function Hero() {
           <motion.p
             initial={{ opacity: 0, letterSpacing: "0.6em" }}
             animate={introDone ? { opacity: 1, letterSpacing: "0.32em" } : { opacity: 0, letterSpacing: "0.6em" }}
-            transition={{ duration: 1.6, ease, delay: 0.2 }}
+            transition={{ duration: 1.2, ease, delay: 0.1 }}
             className="mb-8 text-[11px] font-normal text-ink-soft uppercase sm:text-xs"
           >
             Перде ательесі · Астана · {business.years} жыл
           </motion.p>
           <h1 className="font-serif text-[clamp(46px,11vw,190px)] leading-[0.86] font-extralight tracking-[-0.045em]">
-            <RevealLine delay={0.35}>Жайлылықты</RevealLine>
-            <RevealLine delay={0.5} className="italic text-sage">
+            <RevealLine delay={0.15}>Жайлылықты</RevealLine>
+            <RevealLine delay={0.27} className="italic text-sage">
               тігеміз.
             </RevealLine>
           </h1>
