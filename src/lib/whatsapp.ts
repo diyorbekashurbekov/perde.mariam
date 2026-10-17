@@ -16,6 +16,6 @@ export function choosePhotoLink(src: string, collection?: string) {
   const seen = collection
     ? `Сайттан «${collection}» коллекциясындағы мына пердені көрдім — қатты ұнады 😍`
     : "Сайттан мына пердені көрдім — қатты ұнады 😍"
-  const lines = ["Сәлеметсіз бе! 👋", seen, "Маған да дәл осындай керек.", num ? `Фото №${num}` : "", shareUrl, "", "Бағасы қанша болады?"]
+  const lines = ["Сәлеметсіз бе! 👋", seen, "Үйіме де дәл осындай тігіп берсеңіз деймін.", num ? `Фото №${num}` : "", shareUrl, "", "Бағасы қанша болады?"]
   return whatsappLink(lines.filter((l, i, a) => l !== "" || a[i - 1] !== "").join("\n"))
 }

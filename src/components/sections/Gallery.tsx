@@ -77,7 +77,7 @@ export function Gallery() {
                 className="absolute inset-x-2 bottom-2 inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-paper/92 px-2.5 text-[11px] font-normal text-ink shadow-[0_8px_24px_-10px_rgba(30,26,22,0.6)] backdrop-blur-sm transition-colors hover:bg-gold sm:inset-x-auto sm:bottom-4 sm:left-4 sm:h-11 sm:gap-2 sm:px-5 sm:text-sm"
               >
                 <MessageCircle className="size-4 shrink-0 text-sage" strokeWidth={1.8} aria-hidden />
-                Маған да осындай
+                Үйіме де осындай
               </a>
             </div>
           </CurtainReveal>
@@ -156,7 +156,7 @@ export function Gallery() {
                 className="inline-flex h-14 items-center gap-3 rounded-full bg-gold px-7 text-[15px] font-normal text-ink shadow-xl transition-colors hover:bg-linen"
               >
                 <MessageCircle className="size-5" strokeWidth={1.6} aria-hidden />
-                Маған да осындай керек
+                Үйіме де осындай тігіп беріңіз
               </a>
               <span className="text-xs text-linen/75">Бағасын WhatsApp-та айтамыз</span>
             </div>
