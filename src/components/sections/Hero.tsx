@@ -6,6 +6,7 @@ import { Magnetic } from "@/components/ui/magnetic"
 import { business, heroPhotos } from "@/data"
 import { useIntroDone } from "@/lib/intro"
 import { isLightDevice } from "@/lib/device"
+import { openCatalog, track } from "@/lib/analytics"
 
 // 3D перде бөлек жүктеледі — сайттың алғашқы ашылуы ауырламас үшін.
 const Curtain3D = lazy(() => import("@/components/Curtain3D"))
@@ -111,6 +112,8 @@ export function Hero() {
   const revealOpacity = useTransform(p, [0.38, 0.7], [0, 1])
   const revealY = useTransform(p, [0.38, 0.75], [80, 0])
   const hintOpacity = useTransform(p, [0, 0.08], [1, 0])
+  // Тақырып көрінбей қалғанда оның батырмасы артындағы элементтердің басылуына кедергі жасамасын.
+  const titlePointer = useTransform(titleOpacity, (v) => (v > 0.2 ? "auto" : "none"))
 
   return (
     <section ref={ref} id="top" className="relative h-[260vh]">
@@ -147,6 +150,7 @@ export function Hero() {
                 href={business.whatsapp}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => track("whatsapp_click", { source: "hero" })}
                 className="inline-flex h-12 items-center gap-3 rounded-full bg-ink px-6 sm:h-14 sm:px-7 text-[15px] font-normal text-linen transition-colors hover:bg-sage"
               >
                 <MessageCircle className="size-[18px]" strokeWidth={1.6} aria-hidden />
@@ -154,10 +158,11 @@ export function Hero() {
               </a>
             </Magnetic>
             <a
-              href="#collections"
+              href="#catalog"
+              onClick={() => openCatalog("hero_reveal")}
               className="inline-flex h-12 items-center rounded-full border border-ink/25 px-6 sm:h-14 sm:px-7 text-[15px] font-normal transition hover:border-ink hover:bg-ink hover:text-linen"
             >
-              Коллекция
+              Каталог
             </a>
           </div>
         </motion.div>
@@ -192,11 +197,28 @@ export function Hero() {
               тігеміз.
             </RevealLine>
           </h1>
+          {/* Instagram/WhatsApp-тан келгендер үшін: бірінші экраннан бірден каталогқа */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={introDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+            transition={{ duration: 0.9, ease, delay: 0.45 }}
+            style={{ pointerEvents: titlePointer }}
+            className="mt-9 sm:mt-12"
+          >
+            <a
+              href="#catalog"
+              onClick={() => openCatalog("hero_button")}
+              className="inline-flex h-13 items-center gap-2.5 rounded-full bg-ink px-7 text-[15px] font-normal text-linen shadow-[0_18px_40px_-16px_rgba(42,33,27,0.7)] transition-colors hover:bg-sage sm:h-14 sm:px-8"
+            >
+              Каталогты көру
+              <ArrowDown className="size-4" strokeWidth={1.6} aria-hidden />
+            </a>
+          </motion.div>
         </motion.div>
 
         <motion.div
           style={{ opacity: hintOpacity }}
-          className="absolute inset-x-0 bottom-8 z-30 flex flex-col items-center gap-3 text-[11px] font-normal tracking-[0.28em] text-ink-soft uppercase"
+          className="absolute inset-x-0 bottom-24 z-30 flex flex-col items-center gap-3 text-[11px] sm:bottom-8 font-normal tracking-[0.28em] text-ink-soft uppercase"
         >
           Пердені ашыңыз
           <motion.span animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}>

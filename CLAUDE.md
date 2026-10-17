@@ -24,3 +24,12 @@
 Суреттер сайтта `Photo` компоненті арқылы шығады (src/components/Photo.tsx): телефонға кіші нұсқа, жүктелгенше бұлыңғыр көрініс, экранға 1500 px қалғанда алдын ала жүктеу.
 
 Ескерту: Windows Store Python `AppData\Roaming` ішіндегі жолдарды басқаша көреді — суреттерді өңдегенде жобаның өз папкасындағы толық жолдарды қолдану керек.
+
+## Каталог және WhatsApp
+
+- Тікелей каталог сілтемесі (WhatsApp-та клиентке жіберуге): `https://diyorbekashurbekov.github.io/perde.mariam/#catalog` — кіріспе мен анимациялар өткізіледі, бет бірден каталогтан (галерея, `id="catalog"`) ашылады, барлық сурет көрінеді.
+- WhatsApp хабарламалары: `src/lib/whatsapp.ts`.
+
+## Аналитика
+
+`src/lib/analytics.ts` — `track(event, params)`. Оқиғалар: `whatsapp_click {source, photo?, collection?}`, `catalog_open {source}`, `catalog_show_all`. Олар `dataLayer` (GTM), `gtag` (GA4), `ym` (Яндекс Метрика, `window.YM_ID` керек), `fbq` (Meta Pixel) және `perde:track` оқиғасына жіберіледі. Аналитиканы қосу үшін тек index.html-ге сол жүйенің кодын қою жеткілікті.

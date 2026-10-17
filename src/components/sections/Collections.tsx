@@ -4,6 +4,7 @@ import { ArrowUpRight, MessageCircle } from "lucide-react"
 import { PhotoSlot } from "@/components/PhotoSlot"
 import { collections } from "@/data"
 import { choosePhotoLink } from "@/lib/whatsapp"
+import { track } from "@/lib/analytics"
 
 type CardProps = { c: (typeof collections)[number]; i: number; progress: MotionValue<number>; x: MotionValue<number> }
 
@@ -25,6 +26,7 @@ function Card({ c, i, progress, x }: CardProps) {
     <motion.a
       ref={ref}
       href={choosePhotoLink(c.src, c.title)}
+      onClick={() => track("whatsapp_click", { source: "collection", collection: c.title })}
       target="_blank"
       rel="noreferrer"
       style={{ rotateY, scale, z }}

@@ -2,12 +2,13 @@ import { useState } from "react"
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react"
 import { Menu, X } from "lucide-react"
 import { business } from "@/data"
+import { openCatalog, track } from "@/lib/analytics"
 import { cn } from "@/lib/utils"
 
 const links = [
   { href: "#collections", label: "Коллекция" },
   { href: "#process", label: "Процесс" },
-  { href: "#works", label: "Жұмыстар" },
+  { href: "#catalog", label: "Каталог" },
   { href: "#contact", label: "Байланыс" },
 ]
 
@@ -37,7 +38,7 @@ export function Nav() {
         </a>
         <nav aria-label="Негізгі мәзір" className="hidden items-center gap-10 md:flex">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="group relative text-sm font-normal">
+            <a key={l.href} href={l.href} onClick={() => l.href === "#catalog" && openCatalog("nav")} className="group relative text-sm font-normal">
               {l.label}
               <span className="absolute -bottom-1 left-0 h-px w-full origin-right scale-x-0 bg-ink transition-transform duration-500 group-hover:origin-left group-hover:scale-x-100" />
             </a>
@@ -46,6 +47,7 @@ export function Nav() {
         <div className="flex items-center gap-3">
           <a
             href={business.whatsapp}
+            onClick={() => track("whatsapp_click", { source: "nav" })}
             target="_blank"
             rel="noreferrer"
             className="hidden h-11 items-center rounded-full bg-ink px-5 text-sm font-normal text-linen transition-colors hover:bg-sage sm:inline-flex"
@@ -73,7 +75,7 @@ export function Nav() {
             className="mx-4 mb-4 flex flex-col rounded-3xl bg-paper p-3 shadow-xl md:hidden"
           >
             {links.map((l) => (
-              <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="font-serif rounded-2xl px-4 py-3 text-2xl font-light hover:bg-linen">
+              <a key={l.href} href={l.href} onClick={() => { setOpen(false); if (l.href === "#catalog") openCatalog("nav_mobile") }} className="font-serif rounded-2xl px-4 py-3 text-2xl font-light hover:bg-linen">
                 {l.label}
               </a>
             ))}

@@ -3,6 +3,7 @@ import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "
 import { finishIntro } from "@/lib/intro"
 import { heroPhotos } from "@/data"
 import { isLightDevice } from "@/lib/device"
+import { isDirectCatalog } from "@/lib/analytics"
 
 // Кіріспе жүріп тұрғанда доғаның алғашқы фотоларын алдын ала жүктеп, декодтап қоямыз (ең көбі 1,2 с күтеміз).
 function preloadHero() {
@@ -23,7 +24,7 @@ const pleats =
 // index.html-дегі HTML кіріспенің жалғасы — сондықтан атау бірден орнында тұрады (қайта анимацияланбайды).
 export function Preloader() {
   const [stage, setStage] = useState<"count" | "open" | "gone">(() =>
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "gone" : "count",
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches || isDirectCatalog() ? "gone" : "count",
   )
   const count = useMotionValue(0)
   const label = useTransform(count, (v) => String(Math.round(v)).padStart(3, "0"))

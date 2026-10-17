@@ -14,8 +14,27 @@ import { Process } from "@/components/sections/Process"
 import { Gallery } from "@/components/sections/Gallery"
 import { Contact } from "@/components/sections/Contact"
 import { business } from "@/data"
+import { isDirectCatalog, track } from "@/lib/analytics"
 
 export default function App() {
+  // Тікелей каталог сілтемесі (#catalog): анимацияларды айналдырмай, бірден каталогқа.
+  useEffect(() => {
+    if (!isDirectCatalog()) return
+    track("catalog_open", { source: "direct_link" })
+    history.scrollRestoration = "manual"
+    const jump = () => {
+      const el = document.getElementById("catalog")
+      if (el) window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 10)
+    }
+    requestAnimationFrame(() => requestAnimationFrame(jump))
+    const t1 = setTimeout(jump, 400)
+    const t2 = setTimeout(jump, 1200)
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+    }
+  }, [])
+
   // Lenis — скроллды жұмсақ, «майдай» етеді.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return

@@ -20,7 +20,10 @@
       .boot-sub { margin: 16px 0 0; font: 400 11px/1 "Geologica", system-ui, sans-serif; letter-spacing: .36em; text-transform: uppercase; color: #75655a; }
       .boot-count { position: absolute; right: 24px; bottom: 24px; font: 200 clamp(48px, 7vw, 96px)/1 "Noto Serif Display", Georgia, serif; letter-spacing: -0.04em; color: #2a211b; }
       @keyframes boot-in { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+      .direct .boot { display: none; }
     </style>
+    <!-- Тікелей каталог сілтемесі (#catalog): кіріспе көрсетілмейді -->
+    <script>if (location.hash === "#catalog") document.documentElement.classList.add("direct")</script>
   </head>
   <body>
     <div id="root">

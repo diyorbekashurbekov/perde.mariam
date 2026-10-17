@@ -6,6 +6,7 @@ import { CurtainReveal } from "@/components/CurtainReveal"
 import { Photo } from "@/components/Photo"
 import { useScrollSkew } from "@/lib/useScrollSkew"
 import { choosePhotoLink } from "@/lib/whatsapp"
+import { CATALOG_EVENT, isDirectCatalog, track } from "@/lib/analytics"
 import { gallery } from "@/data"
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -14,7 +15,13 @@ const FIRST = 12
 // Портфолио: тор → суретті басқанда толық экранда ашылады.
 export function Gallery() {
   const [open, setOpen] = useState<number | null>(null)
-  const [showAll, setShowAll] = useState(false)
+  // Тікелей сілтемемен немесе «Каталогты көру» арқылы келсе — барлық сурет бірден ашық.
+  const [showAll, setShowAll] = useState(isDirectCatalog)
+  useEffect(() => {
+    const on = () => setShowAll(true)
+    window.addEventListener(CATALOG_EVENT, on)
+    return () => window.removeEventListener(CATALOG_EVENT, on)
+  }, [])
   const visible = showAll ? gallery : gallery.slice(0, FIRST)
   const skew = useScrollSkew(2.5)
 
@@ -39,7 +46,7 @@ export function Gallery() {
   }, [open, step])
 
   return (
-    <section id="works" className="mx-auto max-w-[1400px] px-5 pt-[14vh] pb-[6vh] sm:px-8">
+    <section id="catalog" className="mx-auto max-w-[1400px] px-5 pt-[14vh] pb-[6vh] sm:px-8">
       <div className="mb-[7vh] flex flex-wrap items-end justify-between gap-6">
         <BlurFade inView>
           <h2 className="font-serif text-[clamp(36px,6.4vw,104px)] leading-[0.92] font-extralight tracking-[-0.04em]">
@@ -47,7 +54,7 @@ export function Gallery() {
           </h2>
         </BlurFade>
         <div className="flex flex-col gap-2 sm:items-end">
-          <p className="text-xs font-normal tracking-[0.3em] text-ink-soft uppercase">(04) Портфолио</p>
+          <p className="text-xs font-normal tracking-[0.3em] text-ink-soft uppercase">(04) Каталог</p>
           <p className="text-sm text-ink-soft">Ұнағанын таңдаңыз — бағасын WhatsApp-та айтамыз.</p>
         </div>
       </div>
@@ -74,6 +81,7 @@ export function Gallery() {
                 href={choosePhotoLink(g.src)}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => track("whatsapp_click", { source: "catalog_card", photo: g.src.match(/pd+/)?.[0] })}
                 className="absolute inset-x-2 bottom-2 inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-paper px-2.5 text-[11px] font-normal text-ink shadow-[0_8px_24px_-10px_rgba(30,26,22,0.6)] transition-colors hover:bg-gold sm:inset-x-auto sm:bottom-4 sm:left-4 sm:h-11 sm:gap-2 sm:px-5 sm:text-sm"
               >
                 <MessageCircle className="size-4 shrink-0 text-sage" strokeWidth={1.8} aria-hidden />
@@ -88,7 +96,10 @@ export function Gallery() {
         <div className="mt-8 flex justify-center sm:mt-12">
           <button
             type="button"
-            onClick={() => setShowAll(true)}
+            onClick={() => {
+              setShowAll(true)
+              track("catalog_show_all")
+            }}
             className="inline-flex h-12 items-center gap-3 rounded-full border border-ink/25 px-7 text-sm font-normal transition hover:border-ink hover:bg-ink hover:text-linen sm:h-14 sm:text-[15px]"
           >
             Тағы көрсету
@@ -153,6 +164,7 @@ export function Gallery() {
                 href={choosePhotoLink(gallery[open].src)}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => track("whatsapp_click", { source: "catalog_lightbox", photo: gallery[open].src.match(/pd+/)?.[0] })}
                 className="inline-flex h-14 items-center gap-3 rounded-full bg-gold px-7 text-[15px] font-normal text-ink shadow-xl transition-colors hover:bg-linen"
               >
                 <MessageCircle className="size-5" strokeWidth={1.6} aria-hidden />

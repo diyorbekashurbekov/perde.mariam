@@ -4,6 +4,7 @@ import { MessageCircle, Phone } from "lucide-react"
 import { ClothCanvas, type RGB } from "@/components/ClothCanvas"
 import { Magnetic } from "@/components/ui/magnetic"
 import { business } from "@/data"
+import { track } from "@/lib/analytics"
 
 const EMERALD: RGB = [40, 88, 72]
 const ease = [0.22, 1, 0.36, 1] as const
@@ -49,6 +50,7 @@ export function Contact() {
                   href={business.whatsapp}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => track("whatsapp_click", { source: "contact" })}
                   className="inline-flex h-13 items-center gap-3 rounded-full bg-gold px-6 text-sm sm:h-16 sm:px-8 sm:text-base font-normal text-ink transition-colors hover:bg-linen"
                 >
                   <MessageCircle className="size-5" strokeWidth={1.6} aria-hidden />

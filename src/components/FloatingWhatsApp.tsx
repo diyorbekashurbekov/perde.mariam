@@ -2,12 +2,18 @@ import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react"
 import { MessageCircle } from "lucide-react"
 import { generalLink } from "@/lib/whatsapp"
+import { track } from "@/lib/analytics"
+import { isLightDevice } from "@/lib/device"
+import { useIntroDone } from "@/lib/intro"
 
-// Hero-дан кейін пайда болатын «Бағасын білу» батырмасы; Байланыс бөлімінде жасырынады.
+// «Бағасын білу» батырмасы: телефонда бірінші экраннан (кіріспе біткен соң) бастап көрінеді,
+// компьютерде hero-дан кейін; Байланыс бөлімінде жасырынады.
 export function FloatingWhatsApp() {
   const { scrollY } = useScroll()
   const [past, setPast] = useState(false)
   const [atContact, setAtContact] = useState(false)
+  const [light] = useState(isLightDevice)
+  const introDone = useIntroDone()
 
   useMotionValueEvent(scrollY, "change", (v) => setPast(v > window.innerHeight * 2.4))
 
@@ -21,11 +27,12 @@ export function FloatingWhatsApp() {
 
   return (
     <AnimatePresence>
-      {past && !atContact && (
+      {introDone && (light || past) && !atContact && (
         <motion.a
           href={generalLink()}
           target="_blank"
           rel="noreferrer"
+          onClick={() => track("whatsapp_click", { source: "floating" })}
           initial={{ opacity: 0, y: 24, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 24, scale: 0.9 }}
