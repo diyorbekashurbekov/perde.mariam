@@ -3,14 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f1e8" />
     <meta name="description" content="Perde Mariam — Астанадағы перде ательесі. 17 жылдық тәжірибе, сапалы маталар, заманауи дизайн." />
     <title>Perde Mariam — перде тігу, Астана</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500&family=Noto+Serif+Display:ital,wght@0,200;0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+    <!-- Бірден көрінетін кіріспе: JavaScript жүктелгенше бет ақ болып тұрмайды. React іске қосылғанда дәл осындай кіріспе жалғасады. -->
+    <style>
+      html, body { margin: 0; background: #f7f1e8; }
+      .boot { position: fixed; inset: 0; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background-color: #efe4d2;
+        background-image: repeating-linear-gradient(90deg, rgba(0,0,0,.10) 0 10px, rgba(255,255,255,.22) 10px 22px, rgba(0,0,0,.04) 22px 34px); }
+      .boot-title { margin: 0; font: 200 clamp(44px, 8vw, 120px)/1 "Noto Serif Display", Georgia, serif; letter-spacing: -0.04em; color: #2a211b; animation: boot-in .9s cubic-bezier(.22,1,.36,1) both; }
+      .boot-title em { font-weight: 300; color: #2e5e4e; }
+      .boot-sub { margin: 16px 0 0; font: 400 11px/1 "Geologica", system-ui, sans-serif; letter-spacing: .36em; text-transform: uppercase; color: #75655a; }
+      .boot-count { position: absolute; right: 24px; bottom: 24px; font: 200 clamp(48px, 7vw, 96px)/1 "Noto Serif Display", Georgia, serif; letter-spacing: -0.04em; color: #2a211b; }
+      @keyframes boot-in { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot" aria-hidden="true">
+        <p class="boot-title">Perde <em>Mariam</em></p>
+        <p class="boot-sub">Перде ательесі · Астана</p>
+        <span class="boot-count">000</span>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

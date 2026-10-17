@@ -111,7 +111,8 @@ export function Hero() {
             className="absolute top-[10vh] left-1/2 h-[70vh] w-[70vw] -translate-x-1/2 rounded-full bg-sand/70 blur-[120px]"
           />
           <div className="absolute top-[13vh] left-1/2 h-[34vh] sm:h-[58vh] w-[min(420px,58vw)] -translate-x-1/2 overflow-hidden rounded-t-full bg-linen-deep shadow-[0_60px_120px_-60px_rgba(30,26,22,0.5)]">
-            {useGL ? (
+            {/* WebGL-ді (Three.js) кіріспе біткен соң ғана жүктейміз — алғашқы секундтарда телефон процессоры бос болсын */}
+            {useGL && introDone ? (
               <Suspense fallback={<ArchSlideshow />}>
                 <ArchGL photos={heroPhotos} />
               </Suspense>
