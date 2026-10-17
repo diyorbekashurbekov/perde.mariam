@@ -34,6 +34,8 @@
 
 `src/lib/analytics.ts` — `track(event, params)`. Оқиғалар: `whatsapp_click {source, photo?, collection?}`, `catalog_open {source}`, `catalog_show_all`. Олар `dataLayer` (GTM), `gtag` (GA4), `ym` (Яндекс Метрика, `window.YM_ID` керек), `fbq` (Meta Pixel) және `perde:track` оқиғасына жіберіледі. GA4 және Meta Pixel: GitHub → Settings → Secrets and variables → Actions → **Variables** бөліміне `GA4_ID` (мысалы `G-…`) және/немесе `META_PIXEL_ID` (сандар) қосып, сайтты қайта шығару жеткілікті — `initAnalytics()` (src/lib/analytics.ts) оларды өзі жүктейді. ID жоқ болса, ештеңе жүктелмейді. Ескі `#works` сілтемесі де каталогқа апарады.
 
+GA4-те `whatsapp_click` **Key event** ретінде тіркелген (Admin → Events → «Создать событие» → «Создать с кодом», 2026-10-18). Көмекші/қосымша оқиға жасамау керек — сұраулар екі рет есептеліп кетеді.
+
 ## Сілтеме превьюі
 
 Open Graph тегтері index.html-де. Превью суреті: `public/og-image.jpg` (1200×630, `scripts/og.py` жасайды). WhatsApp превьюді кэштейді — өзгерген соң жаңасы бірнеше сағаттан кейін көрінуі мүмкін.
