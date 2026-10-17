@@ -32,6 +32,9 @@ for path in sorted(photos.glob("p*.webp")):
             small.save(photos / f"{key}-{width}.webp", "WEBP", quality=76, method=6)
         else:
             im.save(photos / f"{key}-{width}.webp", "WEBP", quality=76, method=6)
+    # WhatsApp превьюі үшін JPG көшірме (WebP превьюде әрдайым көрінбейді).
+    share = im.resize((900, round(h * 900 / w)), Image.LANCZOS) if w > 900 else im
+    share.save(photos / f"{key}-share.jpg", "JPEG", quality=80, optimize=True, progressive=True)
     tiny = im.resize((20, max(1, round(h * 20 / w))), Image.LANCZOS)
     buf = io.BytesIO()
     tiny.save(buf, "WEBP", quality=40)

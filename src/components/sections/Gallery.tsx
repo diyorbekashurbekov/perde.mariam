@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react"
 import { AnimatePresence, motion } from "motion/react"
-import { ChevronLeft, ChevronRight, X } from "lucide-react"
+import { ChevronLeft, ChevronRight, MessageCircle, X } from "lucide-react"
 import { BlurFade } from "@/components/ui/blur-fade"
 import { CurtainReveal } from "@/components/CurtainReveal"
 import { Photo } from "@/components/Photo"
 import { useScrollSkew } from "@/lib/useScrollSkew"
+import { choosePhotoLink } from "@/lib/whatsapp"
 import { gallery } from "@/data"
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -45,7 +46,10 @@ export function Gallery() {
             Жұмыстары<em className="font-light text-sage">мыз.</em>
           </h2>
         </BlurFade>
-        <p className="text-xs font-normal tracking-[0.3em] text-ink-soft uppercase">(04) Портфолио</p>
+        <div className="flex flex-col gap-2 sm:items-end">
+          <p className="text-xs font-normal tracking-[0.3em] text-ink-soft uppercase">(04) Портфолио</p>
+          <p className="text-sm text-ink-soft">Ұнаған суретті басыңыз — WhatsApp-қа бірден жібересіз.</p>
+        </div>
       </div>
 
       <motion.div style={{ skewY: skew }} className="columns-2 gap-3 sm:gap-5 lg:columns-3">
@@ -87,7 +91,7 @@ export function Gallery() {
             role="dialog"
             aria-modal="true"
             aria-label="Сурет"
-            className="fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-10"
+            className="fixed inset-0 z-[90] flex flex-col items-center justify-center gap-5 p-4 sm:p-10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -101,7 +105,7 @@ export function Gallery() {
                 srcSet={`${gallery[open].src.replace(".webp", "-900.webp")} 900w, ${gallery[open].src} 1400w`}
                 sizes="90vw"
                 alt={gallery[open].alt}
-                className="relative max-h-[86vh] max-w-[88vw] rounded-[18px] object-contain shadow-2xl"
+                className="relative max-h-[70vh] max-w-[88vw] rounded-[18px] object-contain shadow-2xl sm:max-h-[74vh]"
                 initial={{ opacity: 0, scale: 0.94, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.97 }}
@@ -132,7 +136,16 @@ export function Gallery() {
             >
               <ChevronRight className="size-5" strokeWidth={1.5} aria-hidden />
             </button>
-            <span className="absolute bottom-6 text-xs tracking-[0.3em] text-linen/80">
+            <a
+              href={choosePhotoLink(gallery[open].src)}
+              target="_blank"
+              rel="noreferrer"
+              className="relative inline-flex h-14 items-center gap-3 rounded-full bg-gold px-7 text-[15px] font-normal text-ink shadow-xl transition-colors hover:bg-linen"
+            >
+              <MessageCircle className="size-5" strokeWidth={1.6} aria-hidden />
+              Осы пердені таңдадым
+            </a>
+            <span className="absolute top-7 left-6 text-xs tracking-[0.3em] text-linen/80">
               {open + 1} / {gallery.length}
             </span>
           </motion.div>

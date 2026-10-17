@@ -2,7 +2,8 @@ import { useLayoutEffect, useRef, useState } from "react"
 import { motion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react"
 import { ArrowUpRight } from "lucide-react"
 import { PhotoSlot } from "@/components/PhotoSlot"
-import { business, collections } from "@/data"
+import { collections } from "@/data"
+import { choosePhotoLink } from "@/lib/whatsapp"
 
 type CardProps = { c: (typeof collections)[number]; i: number; progress: MotionValue<number>; x: MotionValue<number> }
 
@@ -23,7 +24,7 @@ function Card({ c, i, progress, x }: CardProps) {
   return (
     <motion.a
       ref={ref}
-      href={business.whatsapp}
+      href={choosePhotoLink(c.src, c.title)}
       target="_blank"
       rel="noreferrer"
       style={{ rotateY, scale, z }}

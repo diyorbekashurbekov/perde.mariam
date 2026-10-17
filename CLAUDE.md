@@ -13,7 +13,7 @@
 
 1. Суреттерді қарап шығу: скриншот, интерфейсі көрінетін, жазуы бар немесе қайталанатын суреттерді алмау.
 2. WebP-ке айналдыру (ені/биіктігі ≤ 1400 px, quality 80) да `public/photos/pN.webp` деп сақтау — нөмірлер жалғасып кетеді (қазір p1–p46 бар, p2, p13, p16 жоқ; келесісі — p47).
-3. Кіші нұсқалар мен бұлыңғыр алдын ала көріністі жасау: `python -P scripts/photos.py "C:/Users/asus/Documents/perde-mariam"` (pN-480/900.webp және src/photoMeta.json жаңарады).
+3. Кіші нұсқалар мен бұлыңғыр алдын ала көріністі жасау: `python -P scripts/photos.py "C:/Users/asus/Documents/perde-mariam"` (pN-480/900.webp, WhatsApp превьюіне pN-share.jpg және src/photoMeta.json жаңарады).
 4. `src/data.ts` ішінде қажетті жерге қосу:
    - `gallery` — «Жұмыстарымыз» галереясы (көбіне осында),
    - `collections` — коллекция карточкалары,
