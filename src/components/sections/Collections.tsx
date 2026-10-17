@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react"
 import { motion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react"
-import { ArrowUpRight } from "lucide-react"
+import { ArrowUpRight, MessageCircle } from "lucide-react"
 import { PhotoSlot } from "@/components/PhotoSlot"
 import { collections } from "@/data"
 import { choosePhotoLink } from "@/lib/whatsapp"
@@ -36,6 +36,10 @@ function Card({ c, i, progress, x }: CardProps) {
         </motion.div>
         <span className="absolute top-3 right-3 grid size-10 sm:top-5 sm:right-5 sm:size-12 place-items-center rounded-full bg-paper/90 text-ink transition duration-500 group-hover:rotate-45 group-hover:bg-ink group-hover:text-linen">
           <ArrowUpRight className="size-5" strokeWidth={1.4} aria-hidden />
+        </span>
+        <span className="absolute bottom-3 left-3 inline-flex h-10 items-center gap-2 rounded-full bg-paper/92 px-4 text-[13px] font-normal text-ink shadow-[0_8px_24px_-10px_rgba(30,26,22,0.6)] transition-colors group-hover:bg-gold sm:bottom-5 sm:left-5 sm:h-11 sm:text-sm">
+          <MessageCircle className="size-4 text-sage" strokeWidth={1.8} aria-hidden />
+          Бағасын білу
         </span>
       </div>
       <div className="flex items-baseline gap-4 px-1">

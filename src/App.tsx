@@ -7,6 +7,7 @@ import { Statement } from "@/components/sections/Statement"
 import { PhotoRibbon } from "@/components/sections/PhotoRibbon"
 import { ZoomReveal } from "@/components/sections/ZoomReveal"
 import { Preloader } from "@/components/Preloader"
+import { FloatingWhatsApp } from "@/components/FloatingWhatsApp"
 import { Swatches } from "@/components/sections/Swatches"
 import { Collections } from "@/components/sections/Collections"
 import { Process } from "@/components/sections/Process"
@@ -45,6 +46,7 @@ export default function App() {
       <Preloader />
       <Cursor />
       <Nav />
+      <FloatingWhatsApp />
       <main>
         <Hero />
         <Statement />
