@@ -36,6 +36,10 @@
 
 GA4-те `whatsapp_click` **Key event** ретінде тіркелген (Admin → Events → «Создать событие» → «Создать с кодом», 2026-10-18). Көмекші/қосымша оқиға жасамау керек — сұраулар екі рет есептеліп кетеді.
 
+Статистика панелі: GA4 → Отчеты → сол жақ мәзірдегі **Perde Mariam → Тапсырыстар → «WhatsApp өтінімдері»** (Библиотекада жасалған подробный отчет, 2026-10-18). Параметрлері: Батырма орны, Коллекция, Тип устройства, Город; көрсеткіштері: Ключевые события (= WhatsApp басулар), Количество событий, Активные пользователи. Looker Studio Claude-тың ішкі браузерінде ашылмайды (Google `invalid_scope` қатесімен бұғаттайды).
+
+**Админ панель** (әдемі нұсқа): https://claude.ai/artifact/TZHCKnGyAjAj3yafgZqLPp — жеке Artifact, сандар беттегі `<script id="data" type="application/json">` блогында тұрады (өздігінен жаңармайды). «Панельді жаңарт» десе: Artifact `read` арқылы бетті алу → GA4-тен (ішкі браузер, ресурс a412390098p559450462) соңғы 28 күннің сандарын жинау: `totals {users, whatsapp, catalog, catalogShowAll, pageviews}`, `prevTotals {users, whatsapp, catalog}` (алдыңғы 28 күн, жоқ болса `null`), `daily [{date, users, whatsapp, catalog}]`, `whatsappBySource [{key, count}]` (Батырма орны × Ключевые события), `catalogBySource [{key, count}]` (catalog_open × Батырма орны), `collections [{name, count}]`, `photos [{key: "p35", count}]` (GA4 «Фото» өлшемі = `photo` параметрі, 2026-10-18 тіркелді), `devices [{key: mobile|desktop|tablet, users}]`, `cities [{name, users}]` (GA4 ағылшынша атауы, бет өзі аударады), `updatedUtc`, `period`. Нақты дерек жоқ кезде бет анық белгіленген «үлгі» сандарды көрсетеді; `totals.users > 0` болғанда үлгі өзі жоғалады → тек data блогын ауыстырып, сол `url`-ге қайта жариялау. Сандарды ойдан қоспау: дерек жоқ болса бос қалдыру (бет өзі «әзірге дерек жоқ» көрсетеді).
+
 ## Сілтеме превьюі
 
 Open Graph тегтері index.html-де. Превью суреті: `public/og-image.jpg` (1200×630, `scripts/og.py` жасайды). WhatsApp превьюді кэштейді — өзгерген соң жаңасы бірнеше сағаттан кейін көрінуі мүмкін.
