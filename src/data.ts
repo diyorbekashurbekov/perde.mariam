@@ -1,65 +1,47 @@
-// Сурет мекенжайы: сайт қай папкада тұрса да (мысалы, GitHub Pages-тегі /perde.mariam/) дұрыс ашылады.
-const photo = (n: number) => `${import.meta.env.BASE_URL}photos/p${n}.webp`
+// Сайттың барлық өзгертілетін мазмұны src/content.json файлында тұрады.
+// Оны админ панель өзгертеді (…/perde.mariam/admin/ → «Сайтты басқару»), сайт осы жерден оқиды.
+import content from "@/content.json"
 
-// Бизнес туралы ақпарат — @perde.mariam Instagram парақшасынан алынған.
+export type Content = typeof content
+
+// Сурет мекенжайы: сайт қай папкада тұрса да (мысалы, GitHub Pages-тегі /perde.mariam/) дұрыс ашылады.
+const base = import.meta.env.BASE_URL
+export const photoUrl = (key: string) => `${base}photos/${key}.webp`
+export const reviewUrl = (key: string) => `${base}reviews/${key}.webp`
+
+const b = content.business
+// «8 707 …» деп жазылса да халықаралық «7 707 …» пішініне келтіреміз (WhatsApp сілтемесі үшін).
+const digits = b.phone.replace(/\D/g, "").replace(/^8(?=\d{10}$)/, "7")
 export const business = {
-  name: "Perde Mariam",
-  years: 17,
-  phoneDisplay: "+7 707 268 50 21",
-  phoneHref: "tel:+77072685021",
-  whatsapp: "https://wa.me/77072685021",
-  instagram: "https://www.instagram.com/perde.mariam/",
-  instagramHandle: "@perde.mariam",
-  address: "Астана, «Артем» сауда үйі, 5-қабат, 199-бутик",
+  name: b.name,
+  years: b.years,
+  phoneDisplay: b.phoneDisplay,
+  phoneHref: `tel:+${digits}`,
+  whatsapp: `https://wa.me/${digits}`,
+  instagram: `https://www.instagram.com/${b.instagramHandle.replace(/^@/, "")}/`,
+  instagramHandle: b.instagramHandle,
+  address: b.address,
 }
 
 // *жұлдызшамен* белгіленген сөздер курсивпен ерекшеленеді.
-export const statement =
-  "17 жыл бойы Астанадағы үйлерге *жарық* пен *жайлылық* тігіп келеміз. Тек сапалы мата, заманауи дизайн — әр терезеге өз өлшемі."
+export const statement = content.statement
 
 // Hero доғасындағы слайд-шоу.
-export const heroPhotos = [photo(7), photo(35), photo(31), photo(44), photo(12)]
+export const heroPhotos = content.heroPhotos.map(photoUrl)
 
-export const collections = [
-  { title: "Тюль", note: "Жеңіл, мөлдір", photo: "Тюль", src: photo(12) },
-  { title: "Классика", note: "Ламбрекенмен", photo: "Классика", src: photo(8) },
-  { title: "Блэкаут", note: "Жарық өткізбейді", photo: "Блэкаут", src: photo(17) },
-  { title: "Люкс", note: "Өрнекті маталар", photo: "Люкс", src: photo(21) },
-  { title: "Ұстағышпен", note: "Сәнді бекіткіш", photo: "Ұстағыш", src: photo(22) },
-  { title: "Минимализм", note: "Таза сызықтар", photo: "Минимализм", src: photo(4) },
-  { title: "Римдік перде", note: "Ықшам, жинақы", photo: "Римдік перде", src: photo(41) },
-]
+export const collections = content.collections.map((c) => ({ title: c.title, note: c.note, photo: c.photo, src: photoUrl(c.img) }))
 
-export const steps = [
-  { title: "Хабарласу", note: "WhatsApp-қа жазасыз немесе бутикке келесіз.", photo: "Интерьер", src: photo(14) },
-  { title: "Өлшеу", note: "Терезеңізді дәл өлшеп, матаны бірге таңдаймыз.", photo: "Терезе", src: photo(5) },
-  { title: "Тігу", note: "Өз ательемізде, сіздің өлшеміңізге қарай.", photo: "Мата", src: photo(6) },
-  { title: "Орнату", note: "Іліп, әр бүрмесін түзеп береміз.", photo: "Дайын перде", src: photo(19) },
-]
+export const steps = content.steps.map((s) => ({ title: s.title, note: s.note, photo: s.photo, src: photoUrl(s.img) }))
 
-// Клиенттердің нақты пікірлері — @perde.mariam Instagram «отзыв» бөлімі мен WhatsApp хаттарының скриншоттары.
-// Үзінділер скриншоттағы мәтіннен сөзбе-сөз алынған (емлесі өзгертілмеген). Телефон нөмірі, толық аты, аватар бұлдыратылған.
-const review = (n: number) => `${import.meta.env.BASE_URL}reviews/r${n}.webp`
-export const reviews = [
-  { src: review(1), quote: "Уйлеринизге сәнді әрі тиімді бағада перде жасатуды ойлап жүрсеніздер осы кисиге хабарласыныздар, менің көңілімнен шықты 100%", who: "Клиент", date: "Сәуір 2025", via: "Instagram" },
-  { src: review(2), quote: "Қолыңыз мол екен, дерт көрмесін!", who: "Клиент", date: "Наурыз 2025", via: "WhatsApp", note: "Тюль канвас, шторы «Гранде»" },
-  { src: review(3), quote: "Әдемі перделерге рақмет. Ісіңіз, жұмысыңыз берекелі болсын!", who: "Клиент", date: "Қараша 2024", via: "WhatsApp", note: "Лен, тюль «ёлочка»" },
-  { src: review(4), quote: "Спасибо большое за такие красивые шторы. Очень прям красиво получилось. Будем ещё заказывать", who: "Клиент", date: "Қаңтар 2024", via: "WhatsApp" },
-  { src: review(5), quote: "Шторы очень красивые всё понравилось", who: "Клиент", date: "Желтоқсан 2023", via: "WhatsApp" },
-  { src: review(6), quote: "Спасибо Вам большое, очень красиво и доступно. Теперь будем советовать всем только вас", who: "Клиент", date: "Қараша 2023", via: "WhatsApp", note: "Шторы «Гранде», тюль «ёлочка»" },
-  { src: review(7), quote: "Рахмет все отлично встало", who: "Клиент", date: "Қазан 2023", via: "WhatsApp" },
-  { src: review(8), quote: "Сенің тігіп берген шторыңды ұстадым. Үйдегілерге де ұнады. Бұйырса өзім басқа комнаттарға да шторға тапсырыс беремін.", who: "Гүлжеңіс, Арқалық", date: "Қазан 2023", via: "Instagram" },
-  { src: review(9), quote: "Маған қатты ұнады, еңбегіңіздің жемісін көріңіз. Құдай қаласа залға сізге тіктіртемін тағы", who: "Клиент", date: "Тамыз 2023", via: "WhatsApp" },
-  { src: review(10), quote: "Очень профессионально качественно и в срок сшила мне шторы и главное доступная цена!", who: "Рахат", date: "Маусым 2023", via: "WhatsApp" },
-  { src: review(11), quote: "Куштиии шыкты катты унады", who: "Клиент", date: "Жақында", via: "WhatsApp" },
-]
+// Портфолио — ательенің нақты жұмыстары. Алғашқы 12-сі бірден көрінеді, қалғаны «Тағы көрсету» батырмасымен ашылады.
+export const gallery = content.gallery.map((k) => ({ src: photoUrl(k), alt: "Perde Mariam тіккен перде, интерьерде" }))
 
-// Портфолио — ательенің нақты жұмыстары.
-// Алғашқы 12-сі бірден көрінеді, қалғаны «Тағы көрсету» батырмасымен ашылады.
-export const gallery = [
-  35, 31, 32, 44, 30, 34, 25, 28, 1, 15, 40, 9, 3, 29, 33, 36, 37, 38, 39, 42, 43, 45, 46, 26, 27, 10, 11, 18,
-  20, 23, 24,
-].map((n) => ({
-  src: photo(n),
-  alt: "Perde Mariam тіккен перде, интерьерде",
+// Клиенттердің нақты пікірлері (скриншоттарда телефон нөмірі, толық аты, аватар жасырылған).
+export const reviews = content.reviews.map((r) => ({
+  src: reviewUrl(r.img),
+  quote: r.quote,
+  who: r.who,
+  date: r.date,
+  via: r.via,
+  note: "note" in r ? (r.note as string) : undefined,
 }))

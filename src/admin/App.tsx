@@ -1,16 +1,21 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react"
-import { business, collections, gallery, steps } from "@/data"
+import { Fragment, useCallback, useEffect, useState, type ReactNode } from "react"
+import { collections } from "@/data"
 import { AccessError, AuthError, CLIENT_ID, RANGES, clearToken, loadLive, loadStats, savedToken, signIn, signOut, type Live, type RangeKey, type Stats } from "./ga"
 import { BarChart, Donut, Empty, LineChart, Share } from "./charts"
 import { DEVICE, SOURCE, city, dayMonth, fmt, pct } from "./labels"
+import { CollectionsPage, EditorProvider, InfoPage, PhotosPage, ReviewsPage, SaveBar } from "./Editor"
 
-type Page = "home" | "requests" | "catalog" | "visitors" | "site"
-const PAGES: { key: Page; label: string; icon: ReactNode }[] = [
-  { key: "home", label: "Басты бет", icon: <path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10" /> },
+type Page = "home" | "requests" | "catalog" | "visitors" | "photos" | "collections" | "reviews" | "info"
+const EDIT_PAGES: Page[] = ["photos", "collections", "reviews", "info"]
+const PAGES: { key: Page; label: string; icon: ReactNode; group?: string }[] = [
+  { key: "home", label: "Басты бет", group: "Статистика", icon: <path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10" /> },
   { key: "requests", label: "Өтінімдер", icon: <path d="M20 11.6a8 8 0 0 1-11.8 7L4 20l1.4-4A8 8 0 1 1 20 11.6Z" /> },
   { key: "catalog", label: "Каталог", icon: <path d="M3.5 3.5h7v7h-7zM13.5 3.5h7v7h-7zM3.5 13.5h7v7h-7zM13.5 13.5h7v7h-7z" /> },
   { key: "visitors", label: "Келушілер", icon: <path d="M9 11.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5M16 4.8a3.4 3.4 0 0 1 0 6.4M18.5 14.8c1.6.8 2.6 2.6 3 5.2" /> },
-  { key: "site", label: "Сайт ақпараты", icon: <path d="M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17ZM3.5 12h17M12 3.5c2.6 2.4 3.8 5.2 3.8 8.5s-1.2 6.1-3.8 8.5c-2.6-2.4-3.8-5.2-3.8-8.5S9.4 5.9 12 3.5Z" /> },
+  { key: "photos", label: "Фотолар", group: "Сайтты басқару", icon: <path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M15 9.5a1.5 1.5 0 1 0 0-.01" /> },
+  { key: "collections", label: "Коллекциялар", icon: <path d="M4 7h16M4 12h16M4 17h10" /> },
+  { key: "reviews", label: "Пікірлер", icon: <path d="M7 9h10M7 13h6M5 4h14a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9l-4 3v-3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z" /> },
+  { key: "info", label: "Ақпарат пен мәтін", icon: <path d="M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17ZM12 11v6M12 7.5v.01" /> },
 ]
 
 const CITY_NOTE = "Қаланы Google интернет мекенжайы (IP) бойынша анықтайды. Мобильді интернетте (Beeline, Kcell, Tele2, Altel) көрші үлкен қала көрсетілуі немесе қала анықталмауы жиі болады — мысалы, Түркістан Шымкент болып көрінуі мүмкін."
@@ -130,13 +135,18 @@ export default function App() {
   if (!token) return <Gate title="Админ панель" text="Статистиканы көру үшін GA4-ке рұқсаты бар Google аккаунтымен кіріңіз." action={<button className="btn primary" onClick={login} disabled={signingIn}>{signingIn ? "Кіру…" : "Google арқылы кіру"}</button>} error={error?.text} />
 
   const title = PAGES.find((p) => p.key === page)!.label
+  const editing = EDIT_PAGES.includes(page)
   return (
+    <EditorProvider>
     <div className="app">
       <aside className="side">
         <div className="logo"><div className="mark">PM</div><div><b>PERDE MARIAM</b><span>Админ панель</span></div></div>
         <nav className="nav" aria-label="Бөлімдер">
           {PAGES.map((p) => (
-            <button key={p.key} onClick={() => go(p.key)} aria-current={page === p.key ? "page" : undefined}><Icon>{p.icon}</Icon>{p.label}</button>
+            <Fragment key={p.key}>
+              {p.group && <span className="nav-group">{p.group}</span>}
+              <button onClick={() => go(p.key)} aria-current={page === p.key ? "page" : undefined}><Icon>{p.icon}</Icon>{p.label}</button>
+            </Fragment>
           ))}
         </nav>
         <div className="side-foot">
@@ -150,19 +160,23 @@ export default function App() {
         <div className="top">
           <h1>{title}</h1>
           <div className="top-right">
-            {page !== "site" && (
-              <div className="seg" role="group" aria-label="Кезең">
-                {RANGES.map((r) => <button key={r.key} aria-pressed={range === r.key} onClick={() => pickRange(r.key)}>{r.label}</button>)}
-              </div>
+            {editing ? (
+              <a className="pill" href={SITE_URL} target="_blank" rel="noreferrer">Сайтты ашу ↗</a>
+            ) : (
+              <>
+                <div className="seg" role="group" aria-label="Кезең">
+                  {RANGES.map((r) => <button key={r.key} aria-pressed={range === r.key} onClick={() => pickRange(r.key)}>{r.label}</button>)}
+                </div>
+                <button className="pill" onClick={() => load(token, range)} disabled={loading} title="Қазір жаңарту">
+                  <Icon><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5" /></Icon>
+                  {loading ? "Жүктелуде…" : stats ? `Жаңартылды ${new Date(stats.fetchedAt).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}` : "Жаңарту"}
+                </button>
+              </>
             )}
-            <button className="pill" onClick={() => load(token, range)} disabled={loading} title="Қазір жаңарту">
-              <Icon><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5" /></Icon>
-              {loading ? "Жүктелуде…" : stats ? `Жаңартылды ${new Date(stats.fetchedAt).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}` : "Жаңарту"}
-            </button>
           </div>
         </div>
 
-        {error && (
+        {error && !editing && (
           <div className="alert">
             <p><b>{error.kind === "access" ? "Рұқсат жоқ." : "Деректер жүктелмеді."}</b> {error.text}</p>
             <div className="alert-actions">
@@ -172,7 +186,11 @@ export default function App() {
           </div>
         )}
 
-        {page === "site" ? <SitePage /> : !stats ? (
+        {page === "photos" ? <PhotosPage />
+          : page === "collections" ? <CollectionsPage />
+          : page === "reviews" ? <ReviewsPage />
+          : page === "info" ? <InfoPage />
+          : !stats ? (
           <div className="card"><Empty>{loading ? "GA4-тен деректер жүктелуде…" : "Деректер әлі жүктелмеді"}</Empty></div>
         ) : (
           <>
@@ -185,7 +203,9 @@ export default function App() {
           </>
         )}
       </main>
+      <SaveBar />
     </div>
+    </EditorProvider>
   )
 }
 
@@ -395,56 +415,6 @@ function Visitors({ s }: { s: Stats }) {
   )
 }
 
-function Copy({ text }: { text: string }) {
-  const [done, setDone] = useState(false)
-  return <button className="copy" onClick={() => navigator.clipboard?.writeText(text).then(() => { setDone(true); setTimeout(() => setDone(false), 1500) })}>{done ? "Көшірілді" : "Көшіру"}</button>
-}
-
-function SitePage() {
-  const counts = useMemo(() => [
-    [gallery.length, "каталогтағы фото"],
-    [collections.length, "коллекция"],
-    [steps.length, "жұмыс қадамы"],
-    [business.years, "жыл тәжірибе"],
-  ] as const, [])
-  return (
-    <div className="page">
-      <Card title="Сайттағы мазмұн">
-        <div className="stats">{counts.map(([n, l]) => <div className="stat" key={l}><b>{n}</b><span>{l}</span></div>)}</div>
-      </Card>
-      <div className="row2">
-        <Card title="Сілтемелер">
-          <dl className="info">
-            <div><dt>Сайт</dt><dd><a href={SITE_URL} target="_blank" rel="noreferrer">diyorbekashurbekov.github.io/perde.mariam</a></dd><Copy text={SITE_URL} /></div>
-            <div><dt>Каталогқа тікелей</dt><dd><a href={SITE_URL + "#catalog"} target="_blank" rel="noreferrer">…/perde.mariam/#catalog</a></dd><Copy text={SITE_URL + "#catalog"} /></div>
-            <div><dt>Instagram</dt><dd><a href={business.instagram} target="_blank" rel="noreferrer">{business.instagramHandle}</a></dd><span /></div>
-          </dl>
-          <span className="note">Каталог сілтемесін клиентке WhatsApp-та жіберіңіз: сайт кіріспесіз, бірден фотолардан ашылады.</span>
-        </Card>
-        <Card title="Байланыс">
-          <dl className="info">
-            <div><dt>WhatsApp / телефон</dt><dd>{business.phoneDisplay}</dd><Copy text={business.phoneDisplay.replace(/\s/g, "")} /></div>
-            <div><dt>Мекенжай</dt><dd>{business.address}</dd><span /></div>
-          </dl>
-        </Card>
-      </div>
-      <Card title="Коллекциялар">
-        <div className="col-grid">{collections.map((c) => <figure key={c.title}><img src={thumbOf(c.src)} alt="" loading="lazy" /><figcaption><b>{c.title}</b><span>{c.note}</span></figcaption></figure>)}</div>
-      </Card>
-      <Card title={`Каталог фотолары · ${gallery.length}`}>
-        <div className="ph-grid">{gallery.map((g) => { const k = g.src.match(/p\d+/)?.[0] ?? ""; return <figure key={g.src}><img src={thumbOf(g.src)} alt="" loading="lazy" /><figcaption>№{k.slice(1)}</figcaption></figure> })}</div>
-      </Card>
-      <Card title="Статистика қалай жиналады">
-        <dl className="info">
-          <div><dt>Жүйе</dt><dd>Google Analytics 4 · «Perde Mariam сайты»</dd><span /></div>
-          <div><dt>Негізгі мақсат</dt><dd>WhatsApp батырмасын басу (whatsapp_click)</dd><span /></div>
-          <div><dt>Санау басталды</dt><dd>17 қазан 2026</dd><span /></div>
-          <div><dt>Жаңару</dt><dd>Панель ашылғанда және әр 5 минут сайын GA4-тен өзі алады</dd><span /></div>
-        </dl>
-      </Card>
-    </div>
-  )
-}
 
 function LiveCard({ live }: { live: Live | null }) {
   if (!live) return <section className="card live-card"><Empty>Тікелей деректер жүктелуде…</Empty></section>
