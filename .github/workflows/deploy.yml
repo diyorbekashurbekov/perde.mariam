@@ -31,6 +31,8 @@ jobs:
           # Бос болса, аналитика қосылмайды.
           VITE_GA4_ID: ${{ vars.GA4_ID }}
           VITE_META_PIXEL_ID: ${{ vars.META_PIXEL_ID }}
+          # Админ панельге Google арқылы кіру (Google Cloud → «Perde Mariam Admin» жобасы → OAuth client)
+          VITE_GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

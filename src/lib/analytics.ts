@@ -31,7 +31,7 @@ export function initAnalytics() {
     window.gtag("config", ga)
   }
   const px = import.meta.env.VITE_META_PIXEL_ID?.trim()
-  if (px && /^d{6,20}$/.test(px) && !window.fbq) {
+  if (px && /^\d{6,20}$/.test(px) && !window.fbq) {
     type Fbq = ((...args: unknown[]) => void) & { queue: unknown[][]; callMethod?: (...a: unknown[]) => void; loaded: boolean; version: string; push: unknown }
     const fbq = function (...args: unknown[]) {
       if (fbq.callMethod) fbq.callMethod(...args)
