@@ -33,8 +33,16 @@ export const collections = content.collections.map((c) => ({ title: c.title, not
 
 export const steps = content.steps.map((s) => ({ title: s.title, note: s.note, photo: s.photo, src: photoUrl(s.img) }))
 
-// Портфолио — ательенің нақты жұмыстары. Алғашқы 12-сі бірден көрінеді, қалғаны «Тағы көрсету» батырмасымен ашылады.
-export const gallery = content.gallery.map((k) => ({ src: photoUrl(k), alt: "Perde Mariam тіккен перде, интерьерде" }))
+// Кейбір суреттердің (мата үлгілерінің) нақты бағасы бар — метрлеп. Қалғандары тапсырыспен тігіледі.
+export type Price = { name: string; price: number; unit: string }
+const prices: Record<string, Price> = (content as { prices?: Record<string, Price> }).prices ?? {}
+
+// Портфолио — ательенің нақты жұмыстары мен мата үлгілері. Алғашқы 12-сі бірден көрінеді, қалғаны «Тағы көрсету» батырмасымен ашылады.
+export const gallery = content.gallery.map((k) => ({
+  src: photoUrl(k),
+  alt: prices[k] ? `${prices[k].name} мата — Perde Mariam` : "Perde Mariam тіккен перде, интерьерде",
+  price: prices[k] ?? null,
+}))
 
 // Клиенттердің нақты пікірлері (скриншоттарда телефон нөмірі, толық аты, аватар жасырылған).
 export const reviews = content.reviews.map((r) => ({
