@@ -12,6 +12,7 @@ import { Swatches } from "@/components/sections/Swatches"
 import { Collections } from "@/components/sections/Collections"
 import { Process } from "@/components/sections/Process"
 import { Gallery } from "@/components/sections/Gallery"
+import { Reviews } from "@/components/sections/Reviews"
 import { Contact } from "@/components/sections/Contact"
 import { business } from "@/data"
 import { isDirectCatalog, track } from "@/lib/analytics"
@@ -75,6 +76,7 @@ export default function App() {
         <Collections />
         <Process />
         <Gallery />
+        <Reviews />
         <Contact />
       </main>
       <footer className="overflow-hidden px-5 pt-10 sm:px-8">

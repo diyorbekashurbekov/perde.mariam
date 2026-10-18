@@ -12,7 +12,8 @@ const ZOOM = 2.5
 // Телефонда: солға/оңға сырғыту — келесі/алдыңғы сурет, төмен сырғыту — жабу,
 // екі рет басу — үлкейту (үлкейген суретті саусақпен жылжытуға болады).
 // Компьютерде: көрсеткі пернелері, Esc, суретті басу — үлкейту.
-export function Lightbox({ items, index, onIndex, onClose }: { items: Item[]; index: number; onIndex: (i: number) => void; onClose: () => void }) {
+// whatsapp=false — төменгі «Үйіме де осындай» батырмасыз (мысалы, пікір скриншоттары үшін).
+export function Lightbox({ items, index, onIndex, onClose, whatsapp = true }: { items: Item[]; index: number; onIndex: (i: number) => void; onClose: () => void; whatsapp?: boolean }) {
   const item = items[index]
   const [zoom, setZoom] = useState(false)
   const [pan, setPan] = useState({ x: 0, y: 0 })
@@ -118,7 +119,7 @@ export function Lightbox({ items, index, onIndex, onClose }: { items: Item[]; in
     >
       <button type="button" aria-label="Жабу" onClick={onClose} className="absolute inset-0 bg-[#15110e]/95" style={{ opacity: fade }} />
 
-      <div className="relative flex h-full w-full items-center justify-center overflow-hidden px-2 pt-16 pb-36 sm:px-24 sm:pt-20 sm:pb-32">
+      <div className={`relative flex h-full w-full items-center justify-center overflow-hidden px-2 pt-16 sm:px-24 sm:pt-20 ${whatsapp ? "pb-36 sm:pb-32" : "pb-24 sm:pb-12"}`}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={item.src}
@@ -165,7 +166,7 @@ export function Lightbox({ items, index, onIndex, onClose }: { items: Item[]; in
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="pointer-events-none absolute bottom-32 inline-flex items-center gap-2 rounded-full bg-black/45 px-4 py-2 text-xs text-linen/90 sm:bottom-28"
+            className={`pointer-events-none absolute ${whatsapp ? "bottom-32 sm:bottom-28" : "bottom-24 sm:bottom-6"} inline-flex items-center gap-2 rounded-full bg-black/45 px-4 py-2 text-xs text-linen/90`}
           >
             <ZoomIn className="size-4" strokeWidth={1.6} aria-hidden />
             <span className="sm:hidden">Екі рет басып үлкейтіңіз · сырғытып ауыстырыңыз</span>
@@ -174,6 +175,7 @@ export function Lightbox({ items, index, onIndex, onClose }: { items: Item[]; in
         )}
       </AnimatePresence>
 
+      {whatsapp ? (
       <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2 px-4 pt-4 pb-[max(20px,env(safe-area-inset-bottom))]">
         <div className="flex items-center gap-3">
           <button type="button" onClick={() => go(-1)} aria-label="Алдыңғы сурет" className="grid size-12 place-items-center rounded-full bg-paper/90 text-ink sm:hidden">
@@ -196,6 +198,16 @@ export function Lightbox({ items, index, onIndex, onClose }: { items: Item[]; in
         </div>
         <span className="text-xs text-linen/75">Бағасын WhatsApp-та айтамыз</span>
       </div>
+      ) : (
+        <div className="absolute inset-x-0 bottom-0 flex justify-center gap-3 px-4 pb-[max(24px,env(safe-area-inset-bottom))] sm:hidden">
+          <button type="button" onClick={() => go(-1)} aria-label="Алдыңғы сурет" className="grid size-12 place-items-center rounded-full bg-paper/90 text-ink">
+            <ChevronLeft className="size-5" strokeWidth={1.5} aria-hidden />
+          </button>
+          <button type="button" onClick={() => go(1)} aria-label="Келесі сурет" className="grid size-12 place-items-center rounded-full bg-paper/90 text-ink">
+            <ChevronRight className="size-5" strokeWidth={1.5} aria-hidden />
+          </button>
+        </div>
+      )}
     </motion.div>
   )
 }
