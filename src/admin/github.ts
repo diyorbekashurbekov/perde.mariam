@@ -10,7 +10,7 @@ const API = `https://api.github.com/repos/${OWNER}/${REPO}`
 const TOKEN_KEY = "pm-gh-token"
 
 export const TOKEN_URL =
-  "https://github.com/settings/personal-access-tokens/new?name=Perde%20Mariam%20admin&description=Admin%20panel%20content%20editing&expires_in=366"
+  "https://github.com/settings/personal-access-tokens/new?name=Perde%20Mariam%20admin%202&description=Admin%20panel%20content%20editing&target_name=diyorbekashurbekov&expires_in=365&contents=write&actions=read"
 
 export function getToken(): string {
   try {
@@ -61,8 +61,15 @@ async function gh<T>(path: string, init: RequestInit = {}, token = getToken()): 
 
 // Кілтті тексеру: репозиторийге жазу рұқсаты бар ма.
 export async function checkToken(token: string): Promise<void> {
-  const repo = await gh<{ permissions?: { push?: boolean } }>("", {}, token)
-  if (!repo.permissions?.push) throw new GhError("Бұл кілтпен сайтты өзгертуге рұқсат жоқ. Contents — Read and write таңдаңыз.", 403)
+  await gh("", {}, token) // репозиторийді көре ме
+  // Жазу рұқсатын нақты тексереміз: бос блоб жасау (ештеңені өзгертпейді, тек Contents: Read and write болса ғана өтеді).
+  try {
+    await gh("/git/blobs", { method: "POST", body: JSON.stringify({ content: "", encoding: "utf-8" }) }, token)
+  } catch (e) {
+    if (e instanceof GhError && (e.status === 403 || e.status === 404))
+      throw new GhError("Кілтте жазу рұқсаты жоқ. GitHub-та кілтті ашып, Contents → «Read and write» етіп сақтаңыз.", 403)
+    throw e
+  }
 }
 
 /* ---------- base64 (UTF-8 мәтін мен бинар файлдар үшін) ---------- */
