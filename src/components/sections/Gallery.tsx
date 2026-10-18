@@ -10,7 +10,7 @@ import { choosePhotoLink } from "@/lib/whatsapp"
 import { CATALOG_EVENT, isDirectCatalog, track } from "@/lib/analytics"
 import { gallery } from "@/data"
 
-const FIRST = 12
+const FIRST = 18
 
 // 9500 → «9 500» (мыңдықтарды бос орынмен бөлу).
 const fmtPrice = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ")
