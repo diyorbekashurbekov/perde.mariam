@@ -80,7 +80,7 @@ export function Preloader() {
                 className="font-serif text-[clamp(44px,8vw,120px)] leading-none font-extralight tracking-[-0.04em] text-ink"
                 initial={false}
               >
-                Perde <em className="font-light text-sage">Mariam</em>
+                Shtor <em className="font-light text-sage">Mariam</em>
               </motion.p>
             </div>
             <motion.p
