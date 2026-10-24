@@ -34,7 +34,7 @@ function Card({ c, i, progress, x }: CardProps) {
     >
       <div className="relative h-[40vh] sm:h-[58vh] overflow-hidden rounded-[20px] sm:rounded-[28px]">
         <motion.div style={{ x: inner }} className="absolute inset-[-10%] transition-transform duration-[1.2s] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.05]">
-          <PhotoSlot label={`${c.title} — Perde Mariam`} src={c.src} sizes="(max-width: 640px) 75vw, 480px" />
+          <PhotoSlot label={`${c.title} — Shtor Mariam`} src={c.src} sizes="(max-width: 640px) 75vw, 480px" />
         </motion.div>
         <span className="absolute top-3 right-3 grid size-10 sm:top-5 sm:right-5 sm:size-12 place-items-center rounded-full bg-paper/90 text-ink transition duration-500 group-hover:rotate-45 group-hover:bg-ink group-hover:text-linen">
           <ArrowUpRight className="size-5" strokeWidth={1.4} aria-hidden />

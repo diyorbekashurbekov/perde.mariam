@@ -75,20 +75,8 @@ export function Preloader() {
             animate={stage === "open" ? { opacity: 0, y: -20 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="overflow-hidden pb-2">
-              <motion.p
-                className="font-serif text-[clamp(44px,8vw,120px)] leading-none font-extralight tracking-[-0.04em] text-ink"
-                initial={false}
-              >
-                Shtor <em className="font-light text-sage">Mariam</em>
-              </motion.p>
-            </div>
-            <motion.p
-              className="mt-4 text-[11px] font-normal tracking-[0.36em] text-ink-soft uppercase"
-              initial={false}
-            >
-              Перде ательесі · Астана
-            </motion.p>
+            {/* index.html-дегі .boot-logo-мен бірдей: сурет кэште тұр, сондықтан ауысу байқалмайды */}
+            <img className="boot-logo" src={`${import.meta.env.BASE_URL}brand/logo.webp`} alt="" width={800} height={800} />
           </motion.div>
           <motion.span
             className="absolute right-6 bottom-6 font-serif text-[clamp(48px,7vw,96px)] leading-none font-extralight tracking-[-0.04em] text-ink sm:right-10 sm:bottom-8"

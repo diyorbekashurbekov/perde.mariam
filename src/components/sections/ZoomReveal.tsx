@@ -42,7 +42,7 @@ export function ZoomReveal() {
           sizes="100vw"
           srcSet={`${PHOTO.replace(".webp", "-900.webp")} 900w, ${PHOTO} 1400w`}
           src={PHOTO}
-          alt="Perde Mariam тіккен перделер, қонақ бөлмеде"
+          alt="Shtor Mariam тіккен перделер, қонақ бөлмеде"
           loading="lazy"
           decoding="async"
           className="absolute inset-0 h-full w-full object-cover"
@@ -107,7 +107,7 @@ export function ZoomReveal() {
           style={{ opacity: capOpacity, y: capY }}
           className="absolute inset-x-0 bottom-[8vh] flex flex-col gap-3 px-5 text-linen sm:bottom-[10vh] sm:px-[6vw]"
         >
-          <p className="text-[11px] font-normal tracking-[0.3em] text-linen/80 uppercase sm:text-xs">Perde Mariam · Астана</p>
+          <p className="text-[11px] font-normal tracking-[0.3em] text-linen/80 uppercase sm:text-xs">Shtor Mariam · Астана</p>
           <h2 className="font-serif max-w-3xl text-[clamp(34px,6vw,96px)] leading-[0.95] font-extralight tracking-[-0.035em]">
             Әр терезеге — <em className="font-light text-gold">өз сұлулығы.</em>
           </h2>

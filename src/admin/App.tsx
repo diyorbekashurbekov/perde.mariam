@@ -30,6 +30,7 @@ const TABS: { key: "home" | "stats" | "site"; label: string; to: Page; icon: Rea
 ]
 
 const CITY_NOTE = "Қаланы Google интернет мекенжайы (IP) бойынша анықтайды. Мобильді интернетте (Beeline, Kcell, Tele2, Altel) көрші үлкен қала көрсетілуі немесе қала анықталмауы жиі болады — мысалы, Түркістан Шымкент болып көрінуі мүмкін."
+const MARK = `${import.meta.env.BASE_URL}brand/mark.webp`
 const SITE_URL = "https://diyorbekashurbekov.github.io/perde.mariam/"
 const thumbOf = (src: string) => src.replace(/\.webp$/, "-480.webp")
 const photoSrc = (key: string) => `${import.meta.env.BASE_URL}photos/${key}-480.webp`
@@ -152,7 +153,7 @@ export default function App() {
     <EditorProvider>
     <div className="app">
       <aside className="side">
-        <div className="logo"><div className="mark">PM</div><div><b>Perde Mariam</b><span>Админ панель</span></div></div>
+        <div className="logo"><div className="mark"><img src={MARK} alt="" /></div><div><b>Shtor Mariam</b><span>Админ панель</span></div></div>
         <nav className="nav" aria-label="Бөлімдер">
           {GROUPS.map((g) => (
             <div className="nav-sec" key={g}>
@@ -274,7 +275,7 @@ function Gate({ title, text, action, error }: { title: string; text: string; act
   return (
     <div className="gate">
       <div className="gate-card">
-        <div className="mark big">PM</div>
+        <div className="mark big"><img src={MARK} alt="" /></div>
         <h1>{title}</h1>
         <p>{text}</p>
         {action}

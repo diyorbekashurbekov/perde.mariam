@@ -57,6 +57,7 @@ img { max-width: 100%; }
 .side { background: var(--bg); border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 18px; padding: 22px 16px 18px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
 .logo { display: flex; align-items: center; gap: 12px; padding: 4px 6px; }
 .mark { width: 44px; height: 44px; border-radius: 11px; background: linear-gradient(145deg, #3a7561, #234a3d); color: #fff; display: grid; place-items: center; font-family: var(--serif); font-size: 19px; letter-spacing: -.04em; flex: none; box-shadow: 0 4px 12px -4px rgba(46, 94, 78, .55); }
+.mark img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
 .logo b { display: block; font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: -.02em; }
 .logo span { font-size: 13px; color: var(--muted); }
 .nav { display: grid; gap: 18px; }

@@ -91,7 +91,7 @@ export default function App() {
           <span>© {new Date().getFullYear()}</span>
         </div>
         <p aria-hidden className="font-serif mt-8 -mb-[0.2em] text-center text-[clamp(52px,17vw,300px)] leading-[0.9] font-extralight tracking-[-0.06em] whitespace-nowrap">
-          Perde <em className="text-sage">Mariam</em>
+          Shtor <em className="text-sage">Mariam</em>
         </p>
       </footer>
     </>

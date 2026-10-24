@@ -1,4 +1,6 @@
-# Perde Mariam — сайт
+# Shtor Mariam — сайт
+
+Бренд атауы — **Shtor Mariam** (бұрынғы Perde Mariam, 2026-10-25 ауыстырылды). Сайт мекенжайы (`…/perde.mariam/`), GitHub репозиторийі және Instagram `@perde.mariam` өзгермейді. GA4 ресурсының аты әлі «Perde Mariam сайты» (`src/admin/ga.ts`).
 
 Астанадағы перде ательесінің сайты (@perde.mariam). React + Vite + Tailwind + Motion, 3D перде — Three.js.
 
@@ -56,6 +58,10 @@ GA4-те `whatsapp_click` **Key event** ретінде тіркелген (Admin
 - Жазу рұқсаты — GitHub fine-grained token (тек perde.mariam: Contents RW, Actions R), әр құрылғыда бір рет панельге қойылады (localStorage `pm-gh-token`, сайт мекенжайы бойынша бөлек). Токенді Claude жасамайды/енгізбейді.
 - Каталогтан алынған фото файлы өшірілмейді (тек тізімнен шығады). Телефон `8…` деп енгізілсе де `7…`-ге келтіріледі. index.html-дегі JSON-LD/OG телефоны мен мекенжайы статикалық — панельден өзгермейді.
 
+## Логотип
+
+Логотип («М» + перде, «Марям · салон штор»): бас нұсқалары `scripts/brand/logo-master.webp` және `mark-master.webp` (перделі «М»). `python -P scripts/og.py <жоба>` олардан мыналарды жасайды: `public/brand/logo.webp` (ашылу экраны), `public/brand/mark.webp` (мәзір, админ), `public/favicon.svg`, `public/apple-touch-icon.png`, `public/og-image.jpg`. Ашылу экраны екі кезеңнен тұрады: index.html-дегі статикалық `.boot` және React `Preloader` — екеуінде логотип бірдей (`.boot-logo`, анимациясыз), әйтпесе ауысқанда жыпылықтайды. Біреуін өзгертсең, екіншісін де өзгерт.
+
 ## Сілтеме превьюі
 
-Open Graph тегтері index.html-де. Превью суреті: `public/og-image.jpg` (1200×630, `scripts/og.py` жасайды). WhatsApp превьюді кэштейді — өзгерген соң жаңасы бірнеше сағаттан кейін көрінуі мүмкін.
+Open Graph тегтері index.html-де. Превью суреті: `public/og-image.jpg` (1200×630: сол жақта логотип, оң жақта p15 фотосы; `scripts/og.py` жасайды). WhatsApp превьюді кэштейді — өзгерген соң жаңасы бірнеше сағаттан кейін көрінуі мүмкін.

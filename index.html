@@ -4,27 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f7f1e8" />
-    <meta name="description" content="Perde Mariam — Астанадағы перде ательесі. 17 жылдық тәжірибе, сапалы маталар, заманауи дизайн." />
-    <title>Perde Mariam — перде тігу, Астана</title>
+    <meta name="description" content="Shtor Mariam — Астанадағы перде ательесі. 17 жылдық тәжірибе, сапалы маталар, заманауи дизайн." />
+    <title>Shtor Mariam — перде тігу, Астана</title>
     <link rel="canonical" href="https://diyorbekashurbekov.github.io/perde.mariam/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <!-- WhatsApp / Instagram / Telegram сілтеме превьюі (Open Graph) -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Perde Mariam" />
+    <meta property="og:site_name" content="Shtor Mariam" />
     <meta property="og:locale" content="kk_KZ" />
     <meta property="og:url" content="https://diyorbekashurbekov.github.io/perde.mariam/" />
-    <meta property="og:title" content="Perde Mariam — перде тігу, Астана" />
+    <meta property="og:title" content="Shtor Mariam — перде тігу, Астана" />
     <meta property="og:description" content="17 жыл перде саласында. Тюль, блэкаут, римдік перде — өлшеміңізге қарай тігіп, орнатып береміз. Каталогты қараңыз, бағасын WhatsApp-та айтамыз." />
     <meta property="og:image" content="https://diyorbekashurbekov.github.io/perde.mariam/og-image.jpg" />
     <meta property="og:image:secure_url" content="https://diyorbekashurbekov.github.io/perde.mariam/og-image.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Perde Mariam тіккен қызғылт перде мен ақ тюль, қонақ бөлмеде" />
+    <meta property="og:image:alt" content="Shtor Mariam логотипі және ательенің тіккен перделері, қонақ бөлмеде" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Perde Mariam — перде тігу, Астана" />
+    <meta name="twitter:title" content="Shtor Mariam — перде тігу, Астана" />
     <meta name="twitter:description" content="17 жыл перде саласында. Өлшеміңізге қарай тігіп, орнатып береміз." />
     <meta name="twitter:image" content="https://diyorbekashurbekov.github.io/perde.mariam/og-image.jpg" />
 
@@ -33,7 +33,7 @@
       {
         "@context": "https://schema.org",
         "@type": "HomeGoodsStore",
-        "name": "Perde Mariam",
+        "name": "Shtor Mariam",
         "description": "Перде ательесі: тігу және орнату. 17 жылдық тәжірибе.",
         "url": "https://diyorbekashurbekov.github.io/perde.mariam/",
         "image": "https://diyorbekashurbekov.github.io/perde.mariam/og-image.jpg",
@@ -47,6 +47,7 @@
         "sameAs": ["https://www.instagram.com/perde.mariam/"]
       }
     </script>
+    <link rel="preload" as="image" href="/brand/logo.webp" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500&family=Noto+Serif+Display:ital,wght@0,200;0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
@@ -56,11 +57,9 @@
       .boot { position: fixed; inset: 0; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center;
         background-color: #efe4d2;
         background-image: repeating-linear-gradient(90deg, rgba(0,0,0,.10) 0 10px, rgba(255,255,255,.22) 10px 22px, rgba(0,0,0,.04) 22px 34px); }
-      .boot-title { margin: 0; font: 200 clamp(44px, 8vw, 120px)/1 "Noto Serif Display", Georgia, serif; letter-spacing: -0.04em; color: #2a211b; animation: boot-in .9s cubic-bezier(.22,1,.36,1) both; }
-      .boot-title em { font-weight: 300; color: #2e5e4e; }
-      .boot-sub { margin: 16px 0 0; font: 400 11px/1 "Geologica", system-ui, sans-serif; letter-spacing: .36em; text-transform: uppercase; color: #75655a; }
+      /* Логотип: шеттері перде фонына жұмсақ сіңеді. Анимациясыз — React кіріспесі (src/components/Preloader.tsx) дәл осы ережемен жалғасады, ауысу байқалмайды. */
+      .boot-logo { display: block; width: min(82vw, 460px); height: auto; aspect-ratio: 1; -webkit-mask-image: radial-gradient(closest-side, #000 74%, transparent); mask-image: radial-gradient(closest-side, #000 74%, transparent); }
       .boot-count { position: absolute; right: 24px; bottom: 24px; font: 200 clamp(48px, 7vw, 96px)/1 "Noto Serif Display", Georgia, serif; letter-spacing: -0.04em; color: #2a211b; }
-      @keyframes boot-in { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
       .direct .boot { display: none; }
     </style>
     <!-- Тікелей каталог сілтемесі (#catalog): кіріспе көрсетілмейді -->
@@ -69,8 +68,7 @@
   <body>
     <div id="root">
       <div class="boot" aria-hidden="true">
-        <p class="boot-title">Shtor <em>Mariam</em></p>
-        <p class="boot-sub">Перде ательесі · Астана</p>
+        <img class="boot-logo" src="/brand/logo.webp" alt="" width="800" height="800" fetchpriority="high" decoding="async" />
         <span class="boot-count">000</span>
       </div>
     </div>

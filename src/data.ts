@@ -34,7 +34,7 @@ export const collections = content.collections.map((c) => ({ title: c.title, not
 export const steps = content.steps.map((s) => ({ title: s.title, note: s.note, photo: s.photo, src: photoUrl(s.img) }))
 
 // Портфолио — ательенің нақты жұмыстары. Алғашқы 12-сі бірден көрінеді, қалғаны «Тағы көрсету» батырмасымен ашылады.
-export const gallery = content.gallery.map((k) => ({ src: photoUrl(k), alt: "Perde Mariam тіккен перде, интерьерде" }))
+export const gallery = content.gallery.map((k) => ({ src: photoUrl(k), alt: "Shtor Mariam тіккен перде, интерьерде" }))
 
 // «Маталар мен бағалар»: әр мата — атауы, бір метрінің бағасы, қысқаша сипаттамасы және суреттері.
 // kind: "tulle" — тюль, "curtain" — штор маталары.
@@ -43,7 +43,7 @@ export const fabrics = content.fabrics.map((f) => ({
   name: f.name,
   price: f.price,
   note: f.note,
-  photos: f.photos.map((k) => ({ src: photoUrl(k), alt: `${f.name} — Perde Mariam мата үлгісі` })),
+  photos: f.photos.map((k) => ({ src: photoUrl(k), alt: `${f.name} — Shtor Mariam мата үлгісі` })),
 }))
 export type Fabric = (typeof fabrics)[number]
 

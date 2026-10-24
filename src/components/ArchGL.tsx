@@ -202,5 +202,5 @@ export default function ArchGL({ photos }: ArchGLProps) {
     }
   }, [photos])
 
-  return <div ref={mountRef} role="img" aria-label="Perde Mariam жұмыстары" className="absolute inset-0" />
+  return <div ref={mountRef} role="img" aria-label="Shtor Mariam жұмыстары" className="absolute inset-0" />
 }

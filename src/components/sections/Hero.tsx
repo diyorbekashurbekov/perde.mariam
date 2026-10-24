@@ -56,7 +56,7 @@ function ArchSlideshow() {
         sizes="(max-width: 640px) 60vw, 420px"
         srcSet={`${heroPhotos[i].replace(".webp", "-480.webp")} 480w, ${heroPhotos[i].replace(".webp", "-900.webp")} 900w, ${heroPhotos[i]} 1400w`}
         src={heroPhotos[i]}
-        alt="Perde Mariam тіккен перде, интерьерде"
+        alt="Shtor Mariam тіккен перде, интерьерде"
         className="absolute inset-0 h-full w-full object-cover"
         initial={{ opacity: 0, scale: 1.18 }}
         animate={{ opacity: 1, scale: 1.04 }}

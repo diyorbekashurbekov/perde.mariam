@@ -34,8 +34,11 @@ export function Nav() {
       )}
     >
       <div className="mx-auto flex h-20 max-w-[1400px] items-center justify-between gap-6 px-5 sm:px-8">
-        <a href="#top" className="font-serif text-2xl font-light tracking-[-0.02em]">
-          Perde <em className="text-sage">Mariam</em>
+        <a href="#top" className="flex items-center gap-2.5 font-serif text-2xl font-light tracking-[-0.02em]">
+          <img src={`${import.meta.env.BASE_URL}brand/mark.webp`} alt="" width={36} height={36} className="size-9 rounded-[10px] shadow-[0_4px_14px_-6px_rgba(42,33,27,0.45)]" />
+          <span>
+            Shtor <em className="text-sage">Mariam</em>
+          </span>
         </a>
         <nav aria-label="Негізгі мәзір" className="hidden items-center gap-10 md:flex">
           {links.map((l) => (
