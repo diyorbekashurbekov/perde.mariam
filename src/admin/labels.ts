@@ -9,6 +9,8 @@ export const SOURCE: Record<string, string> = {
   catalog_card: "Каталогтағы фото",
   catalog_lightbox: "Үлкейтілген фото",
   contact: "Байланыс бөлімі",
+  fabric_card: "Маталар: карточка",
+  fabric_lightbox: "Маталар: үлкейтілген фото",
   direct_link: "Тікелей сілтеме (#catalog)",
   hero_button: "«Каталогты көру» батырмасы",
   hero_reveal: "Бірінші экрандағы сілтеме",

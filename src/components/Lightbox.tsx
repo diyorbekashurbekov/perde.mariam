@@ -13,7 +13,9 @@ const ZOOM = 2.5
 // екі рет басу — үлкейту (үлкейген суретті саусақпен жылжытуға болады).
 // Компьютерде: көрсеткі пернелері, Esc, суретті басу — үлкейту.
 // whatsapp=false — төменгі «Үйіме де осындай» батырмасыз (мысалы, пікір скриншоттары үшін).
-export function Lightbox({ items, index, onIndex, onClose, whatsapp = true }: { items: Item[]; index: number; onIndex: (i: number) => void; onClose: () => void; whatsapp?: boolean }) {
+// cta — төменгі батырманың өз мәтіні мен сілтемесі (мысалы, маталар бөлімінде «Осы матаны сұрау»).
+type Cta = { label: string; short: string; note: string; href: (src: string) => string; onClick?: () => void }
+export function Lightbox({ items, index, onIndex, onClose, whatsapp = true, cta }: { items: Item[]; index: number; onIndex: (i: number) => void; onClose: () => void; whatsapp?: boolean; cta?: Cta }) {
   const item = items[index]
   const [zoom, setZoom] = useState(false)
   const [pan, setPan] = useState({ x: 0, y: 0 })
@@ -182,21 +184,21 @@ export function Lightbox({ items, index, onIndex, onClose, whatsapp = true }: { 
             <ChevronLeft className="size-5" strokeWidth={1.5} aria-hidden />
           </button>
           <a
-            href={choosePhotoLink(item.src)}
+            href={cta ? cta.href(item.src) : choosePhotoLink(item.src)}
             target="_blank"
             rel="noreferrer"
-            onClick={() => track("whatsapp_click", { source: "catalog_lightbox", photo })}
+            onClick={() => (cta?.onClick ? cta.onClick() : track("whatsapp_click", { source: "catalog_lightbox", photo }))}
             className="inline-flex h-14 items-center gap-2.5 rounded-full bg-gold px-6 text-[15px] font-normal text-ink shadow-xl transition-colors hover:bg-linen sm:gap-3 sm:px-7"
           >
             <MessageCircle className="size-5 shrink-0" strokeWidth={1.6} aria-hidden />
-            <span className="sm:hidden">Үйіме де осындай</span>
-            <span className="hidden sm:inline">Үйіме де осындай тігіп беріңіз</span>
+            <span className="sm:hidden">{cta ? cta.short : "Үйіме де осындай"}</span>
+            <span className="hidden sm:inline">{cta ? cta.label : "Үйіме де осындай тігіп беріңіз"}</span>
           </a>
           <button type="button" onClick={() => go(1)} aria-label="Келесі сурет" className="grid size-12 place-items-center rounded-full bg-paper/90 text-ink sm:hidden">
             <ChevronRight className="size-5" strokeWidth={1.5} aria-hidden />
           </button>
         </div>
-        <span className="text-xs text-linen/75">Бағасын WhatsApp-та айтамыз</span>
+        <span className="text-xs text-linen/75">{cta ? cta.note : "Бағасын WhatsApp-та айтамыз"}</span>
       </div>
       ) : (
         <div className="absolute inset-x-0 bottom-0 flex justify-center gap-3 px-4 pb-[max(24px,env(safe-area-inset-bottom))] sm:hidden">

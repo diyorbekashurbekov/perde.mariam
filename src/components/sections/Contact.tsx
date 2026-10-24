@@ -27,7 +27,7 @@ export function Contact() {
           <ClothCanvas color={EMERALD} folds={14} seed={1.3} />
         </div>
         <div className="relative z-10 flex min-h-[70vh] sm:min-h-[88vh] flex-col justify-between gap-16 p-6 sm:p-12 lg:p-16">
-          <p className="text-xs font-normal tracking-[0.3em] text-linen/75 uppercase">(06) Байланыс<span className="hidden sm:inline"> · тышқанмен матаны тербетіп көріңіз</span></p>
+          <p className="text-xs font-normal tracking-[0.3em] text-linen/75 uppercase">(07) Байланыс<span className="hidden sm:inline"> · тышқанмен матаны тербетіп көріңіз</span></p>
 
           <h2 className="font-serif text-[clamp(38px,8.4vw,150px)] leading-[0.9] font-extralight tracking-[-0.045em] text-linen">
             {["Пердеңізді", "бірге", "таңдайық."].map((w, i) => (

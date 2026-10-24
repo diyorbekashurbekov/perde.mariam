@@ -12,6 +12,7 @@ import { Swatches } from "@/components/sections/Swatches"
 import { Collections } from "@/components/sections/Collections"
 import { Process } from "@/components/sections/Process"
 import { Gallery } from "@/components/sections/Gallery"
+import { Fabrics } from "@/components/sections/Fabrics"
 import { Reviews } from "@/components/sections/Reviews"
 import { Contact } from "@/components/sections/Contact"
 import { business } from "@/data"
@@ -76,6 +77,7 @@ export default function App() {
         <Collections />
         <Process />
         <Gallery />
+        <Fabrics />
         <Reviews />
         <Contact />
       </main>

@@ -22,7 +22,7 @@ export function Reviews() {
             </h2>
           </BlurFade>
           <div className="flex flex-col gap-2 sm:items-end">
-            <p className="text-xs font-normal tracking-[0.3em] text-ink-soft uppercase">(05) Пікірлер</p>
+            <p className="text-xs font-normal tracking-[0.3em] text-ink-soft uppercase">(06) Пікірлер</p>
             <p className="text-sm text-ink-soft">{reviews.length} нақты хат · Instagram мен WhatsApp-тан</p>
           </div>
         </div>

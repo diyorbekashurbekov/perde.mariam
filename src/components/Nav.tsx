@@ -9,6 +9,7 @@ const links = [
   { href: "#collections", label: "Коллекция" },
   { href: "#process", label: "Процесс" },
   { href: "#catalog", label: "Каталог" },
+  { href: "#fabrics", label: "Маталар" },
   { href: "#contact", label: "Байланыс" },
 ]
 

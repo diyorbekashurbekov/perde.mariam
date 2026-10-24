@@ -83,7 +83,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
   }, [base.meta, uploads])
 
   const used = useMemo(() => {
-    const s = new Set<string>([...draft.gallery, ...draft.heroPhotos, ...draft.collections.map((c) => c.img), ...draft.steps.map((x) => x.img), ...draft.reviews.map((r) => r.img)])
+    const s = new Set<string>([...draft.gallery, ...draft.heroPhotos, ...draft.collections.map((c) => c.img), ...draft.steps.map((x) => x.img), ...draft.reviews.map((r) => r.img), ...draft.fabrics.flatMap((f) => f.photos)])
     return s
   }, [draft])
   const liveUploads = Object.keys(uploads).filter((k) => used.has(k))

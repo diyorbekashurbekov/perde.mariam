@@ -10,10 +10,7 @@ import { choosePhotoLink } from "@/lib/whatsapp"
 import { CATALOG_EVENT, isDirectCatalog, track } from "@/lib/analytics"
 import { gallery } from "@/data"
 
-const FIRST = 24
-
-// 9500 → «9 500» (мыңдықтарды бос орынмен бөлу).
-const fmtPrice = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+const FIRST = 12
 
 // Портфолио: тор → суретті басқанда толық экранда ашылады (Lightbox: сырғыту, үлкейту).
 export function Gallery() {
@@ -60,15 +57,6 @@ export function Gallery() {
                   className="block h-auto transition-transform duration-[1.2s] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04]"
                 />
               </button>
-              {/* Мата үлгісінің бағасы — метрлеп (тек бағасы бар суреттерде) */}
-              {g.price && (
-                <span className="pointer-events-none absolute top-2 left-2 flex flex-col rounded-xl bg-ink/82 px-2.5 py-1.5 leading-tight text-paper backdrop-blur-sm sm:top-4 sm:left-4 sm:px-3 sm:py-2">
-                  <span className="text-[9px] font-normal tracking-[0.08em] text-paper/70 uppercase sm:text-[10px]">{g.price.name}</span>
-                  <span className="text-[13px] font-semibold sm:text-[16px]">
-                    {fmtPrice(g.price.price)} ₸<span className="font-normal text-paper/75">/{g.price.unit}</span>
-                  </span>
-                </span>
-              )}
               {/* Әр суретте тұрақты көрінетін батырма — суретті ашпай-ақ WhatsApp-қа жазу */}
               <a
                 href={choosePhotoLink(g.src)}
