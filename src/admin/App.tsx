@@ -1,21 +1,32 @@
-import { Fragment, useCallback, useEffect, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useState, type ReactNode } from "react"
 import { collections } from "@/data"
 import { AccessError, AuthError, CLIENT_ID, RANGES, clearToken, loadLive, loadStats, savedToken, signIn, signOut, type Live, type RangeKey, type Stats } from "./ga"
 import { BarChart, Donut, Empty, LineChart, Share } from "./charts"
 import { DEVICE, SOURCE, city, dayMonth, fmt, pct } from "./labels"
-import { CollectionsPage, EditorProvider, InfoPage, PhotosPage, ReviewsPage, SaveBar } from "./Editor"
+import { CollectionsPage, ConnectCard, EditorProvider, FabricsPage, InfoPage, PhotosPage, ReviewsPage, SaveBar } from "./Editor"
 
-type Page = "home" | "requests" | "catalog" | "visitors" | "photos" | "collections" | "reviews" | "info"
-const EDIT_PAGES: Page[] = ["photos", "collections", "reviews", "info"]
-const PAGES: { key: Page; label: string; icon: ReactNode; group?: string }[] = [
-  { key: "home", label: "Басты бет", group: "Статистика", icon: <path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10" /> },
-  { key: "requests", label: "Өтінімдер", icon: <path d="M20 11.6a8 8 0 0 1-11.8 7L4 20l1.4-4A8 8 0 1 1 20 11.6Z" /> },
-  { key: "catalog", label: "Каталог", icon: <path d="M3.5 3.5h7v7h-7zM13.5 3.5h7v7h-7zM3.5 13.5h7v7h-7zM13.5 13.5h7v7h-7z" /> },
-  { key: "visitors", label: "Келушілер", icon: <path d="M9 11.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5M16 4.8a3.4 3.4 0 0 1 0 6.4M18.5 14.8c1.6.8 2.6 2.6 3 5.2" /> },
-  { key: "photos", label: "Фотолар", group: "Сайтты басқару", icon: <path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M15 9.5a1.5 1.5 0 1 0 0-.01" /> },
-  { key: "collections", label: "Коллекциялар", icon: <path d="M4 7h16M4 12h16M4 17h10" /> },
-  { key: "reviews", label: "Пікірлер", icon: <path d="M7 9h10M7 13h6M5 4h14a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9l-4 3v-3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z" /> },
-  { key: "info", label: "Ақпарат пен мәтін", icon: <path d="M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17ZM12 11v6M12 7.5v.01" /> },
+type Page = "home" | "requests" | "catalog" | "visitors" | "photos" | "fabrics" | "collections" | "reviews" | "info" | "site"
+const EDIT_PAGES: Page[] = ["photos", "fabrics", "collections", "reviews", "info", "site"]
+const STAT_PAGES: Page[] = ["requests", "catalog", "visitors"]
+type Group = "Статистика" | "Сайтты басқару"
+// tint — iOS «Баптаулар»-дағыдай түрлі түсті белгіше-шаршының түсі.
+const PAGES: { key: Page; label: string; icon: ReactNode; group: Group; tint: string }[] = [
+  { key: "home", label: "Басты бет", group: "Статистика", tint: "#34C759", icon: <path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10" /> },
+  { key: "requests", label: "Өтінімдер", group: "Статистика", tint: "#25A65A", icon: <path d="M20 11.6a8 8 0 0 1-11.8 7L4 20l1.4-4A8 8 0 1 1 20 11.6Z" /> },
+  { key: "catalog", label: "Каталог", group: "Статистика", tint: "#FF9500", icon: <path d="M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4zM13.5 13.5H20V20h-6.5z" /> },
+  { key: "visitors", label: "Келушілер", group: "Статистика", tint: "#5856D6", icon: <path d="M9 11.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5M16 4.8a3.4 3.4 0 0 1 0 6.4M18.5 14.8c1.6.8 2.6 2.6 3 5.2" /> },
+  { key: "photos", label: "Каталог фотолары", group: "Сайтты басқару", tint: "#FF2D55", icon: <path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M15 9.5a1.5 1.5 0 1 0 0-.01" /> },
+  { key: "fabrics", label: "Маталар мен бағалар", group: "Сайтты басқару", tint: "#AF52DE", icon: <path d="M3.5 12V4.5h7.5l9.5 9.5-7.5 7.5L3.5 12ZM8 8.5a.5.5 0 1 0 0-.01" /> },
+  { key: "collections", label: "Коллекциялар", group: "Сайтты басқару", tint: "#007AFF", icon: <path d="M4 7h16M4 12h16M4 17h10" /> },
+  { key: "reviews", label: "Пікірлер", group: "Сайтты басқару", tint: "#FF9F0A", icon: <path d="M7 9h10M7 13h6M5 4h14a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9l-4 3v-3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z" /> },
+  { key: "info", label: "Ақпарат пен мәтін", group: "Сайтты басқару", tint: "#8E8E93", icon: <path d="M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17ZM12 11v6M12 7.5v.01" /> },
+]
+const GROUPS: Group[] = ["Статистика", "Сайтты басқару"]
+// Телефондағы төменгі таб-бар
+const TABS: { key: "home" | "stats" | "site"; label: string; to: Page; icon: ReactNode }[] = [
+  { key: "home", label: "Басты", to: "home", icon: <path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10" /> },
+  { key: "stats", label: "Статистика", to: "requests", icon: <path d="M5 20V11M12 20V5M19 20v-6" /> },
+  { key: "site", label: "Сайт", to: "site", icon: <path d="M4 20h4L19 9l-4-4L4 16v4ZM13.5 6.5l4 4" /> },
 ]
 
 const CITY_NOTE = "Қаланы Google интернет мекенжайы (IP) бойынша анықтайды. Мобильді интернетте (Beeline, Kcell, Tele2, Altel) көрші үлкен қала көрсетілуі немесе қала анықталмауы жиі болады — мысалы, Түркістан Шымкент болып көрінуі мүмкін."
@@ -30,7 +41,7 @@ function Icon({ children }: { children: ReactNode }) {
 
 function readPage(): Page {
   const h = location.hash.slice(1) as Page
-  return PAGES.some((p) => p.key === h) ? h : "home"
+  return h === "site" || PAGES.some((p) => p.key === h) ? h : "home"
 }
 function readRange(): RangeKey {
   try {
@@ -134,19 +145,24 @@ export default function App() {
   if (!CLIENT_ID) return <Gate title="Кіру әлі бапталмаған" text="Админ панельге Google арқылы кіру үшін GitHub-та GOOGLE_CLIENT_ID айнымалысы қосылуы керек." />
   if (!token) return <Gate title="Админ панель" text="Статистиканы көру үшін GA4-ке рұқсаты бар Google аккаунтымен кіріңіз." action={<button className="btn primary" onClick={login} disabled={signingIn}>{signingIn ? "Кіру…" : "Google арқылы кіру"}</button>} error={error?.text} />
 
-  const title = PAGES.find((p) => p.key === page)!.label
+  const title = page === "site" ? "Сайт" : PAGES.find((p) => p.key === page)!.label
   const editing = EDIT_PAGES.includes(page)
+  const tab = page === "home" ? "home" : STAT_PAGES.includes(page) ? "stats" : "site"
   return (
     <EditorProvider>
     <div className="app">
       <aside className="side">
-        <div className="logo"><div className="mark">PM</div><div><b>PERDE MARIAM</b><span>Админ панель</span></div></div>
+        <div className="logo"><div className="mark">PM</div><div><b>Perde Mariam</b><span>Админ панель</span></div></div>
         <nav className="nav" aria-label="Бөлімдер">
-          {PAGES.map((p) => (
-            <Fragment key={p.key}>
-              {p.group && <span className="nav-group">{p.group}</span>}
-              <button onClick={() => go(p.key)} aria-current={page === p.key ? "page" : undefined}><Icon>{p.icon}</Icon>{p.label}</button>
-            </Fragment>
+          {GROUPS.map((g) => (
+            <div className="nav-sec" key={g}>
+              <span className="nav-group">{g}</span>
+              <div className="nav-list">
+                {PAGES.filter((p) => p.group === g).map((p) => (
+                  <button key={p.key} onClick={() => go(p.key)} aria-current={page === p.key ? "page" : undefined}><span className="tile" style={{ background: p.tint }}><Icon>{p.icon}</Icon></span>{p.label}</button>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
         <div className="side-foot">
@@ -158,9 +174,10 @@ export default function App() {
 
       <main>
         <div className="top">
+          {editing && page !== "site" && <button className="back" onClick={() => go("site")}><Icon><path d="M15 5l-7 7 7 7" /></Icon>Сайт</button>}
           <h1>{title}</h1>
           <div className="top-right">
-            {editing ? (
+            {page === "site" ? null : editing ? (
               <a className="pill" href={SITE_URL} target="_blank" rel="noreferrer">Сайтты ашу ↗</a>
             ) : (
               <>
@@ -176,6 +193,12 @@ export default function App() {
           </div>
         </div>
 
+        {STAT_PAGES.includes(page) && (
+          <div className="seg seg-wide only-m" role="group" aria-label="Статистика бөлімі">
+            {STAT_PAGES.map((k) => <button key={k} aria-pressed={page === k} onClick={() => go(k)}>{PAGES.find((p) => p.key === k)!.label}</button>)}
+          </div>
+        )}
+
         {error && !editing && (
           <div className="alert">
             <p><b>{error.kind === "access" ? "Рұқсат жоқ." : "Деректер жүктелмеді."}</b> {error.text}</p>
@@ -186,7 +209,9 @@ export default function App() {
           </div>
         )}
 
-        {page === "photos" ? <PhotosPage />
+        {page === "site" ? <SiteMenu go={go} logout={logout} />
+          : page === "photos" ? <PhotosPage />
+          : page === "fabrics" ? <FabricsPage />
           : page === "collections" ? <CollectionsPage />
           : page === "reviews" ? <ReviewsPage />
           : page === "info" ? <InfoPage />
@@ -204,8 +229,44 @@ export default function App() {
         )}
       </main>
       <SaveBar />
+      <nav className="tabbar" aria-label="Негізгі бөлімдер">
+        {TABS.map((t) => (
+          <button key={t.key} onClick={() => go(t.to)} aria-current={tab === t.key ? "page" : undefined}><Icon>{t.icon}</Icon>{t.label}</button>
+        ))}
+      </nav>
     </div>
     </EditorProvider>
+  )
+}
+
+// Телефондағы «Сайт» беті: iOS «Баптаулар» сияқты тізім.
+function SiteMenu({ go, logout }: { go: (p: Page) => void; logout: () => void }) {
+  const chev = <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+  return (
+    <div className="page">
+      <ConnectCard />
+      <span className="ios-head">Сайтты басқару</span>
+      <div className="ios-group">
+        {PAGES.filter((p) => p.group === "Сайтты басқару").map((p) => (
+          <button key={p.key} className="ios-row" onClick={() => go(p.key)}>
+            <span className="tile" style={{ background: p.tint }}><Icon>{p.icon}</Icon></span>
+            <span>{p.label}</span>
+            {chev}
+          </button>
+        ))}
+      </div>
+      <div className="ios-group">
+        <a className="ios-row" href={SITE_URL} target="_blank" rel="noreferrer">
+          <span className="tile" style={{ background: "#007AFF" }}><Icon><path d="M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17ZM3.5 12h17M12 3.5c2.3 2.4 3.4 5.2 3.4 8.5s-1.1 6.1-3.4 8.5c-2.3-2.4-3.4-5.2-3.4-8.5S9.7 5.9 12 3.5Z" /></Icon></span>
+          <span>Сайтты ашу</span>
+          {chev}
+        </a>
+      </div>
+      <div className="ios-group">
+        <button className="ios-row danger" onClick={logout}>Шығу</button>
+      </div>
+      <p className="ios-foot">GA4-пен байланыс бар · өзгерістер «Сайтқа шығару» батырмасымен сақталады</p>
+    </div>
   )
 }
 

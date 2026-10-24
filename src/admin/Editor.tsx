@@ -197,6 +197,9 @@ function validate(d: Content): string {
   if (d.collections.some((c) => !c.title.trim())) return "Әр коллекцияның атауы болуы керек."
   if (d.steps.some((s) => !s.title.trim())) return "Әр қадамның атауы болуы керек."
   if (d.reviews.some((r) => !r.quote.trim())) return "Әр пікірдің мәтіні болуы керек."
+  if (d.fabrics.some((f) => !f.name.trim())) return "Әр матаның атауы болуы керек."
+  if (d.fabrics.some((f) => !(f.price > 0))) return "Әр матаның бағасы (1 метр) болуы керек."
+  if (d.fabrics.some((f) => !f.photos.length)) return "Әр матада кемінде бір сурет болуы керек."
   const digits = d.business.phone.replace(/\D/g, "")
   if (digits.length < 10) return "Телефон нөмірі толық емес."
   return ""
@@ -414,6 +417,103 @@ export function CollectionsPage() {
           ))}
         </div>
       </section>
+    </div>
+  )
+}
+
+/* ---------- Маталар мен бағалар ---------- */
+
+type Fabric = { kind: string; name: string; price: number; note: string; photos: string[] }
+const KINDS = [
+  { key: "tulle", label: "Тюль", title: "Тюль" },
+  { key: "curtain", label: "Штор", title: "Штор маталары" },
+] as const
+const fmtPrice = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+
+function AddPhotoTile({ onFiles }: { onFiles: (f: FileList) => void }) {
+  const ref = useRef<HTMLInputElement>(null)
+  return (
+    <>
+      <button type="button" className="fab-add" onClick={() => ref.current?.click()}>
+        <Ico d={I.plus} />Сурет қосу
+      </button>
+      <input ref={ref} type="file" accept="image/*" multiple hidden onChange={(e) => { if (e.target.files?.length) onFiles(e.target.files); e.target.value = "" }} />
+    </>
+  )
+}
+
+export function FabricsPage() {
+  const s = useStore()
+  const fs = s.draft.fabrics as Fabric[]
+  const [pick, setPick] = useState<number | null>(null)
+  const ed = (i: number, fn: (f: Fabric) => void) => s.set((d) => fn((d.fabrics as Fabric[])[i]))
+  // Бір түрдің (тюль/штор) ішінде ғана жоғары-төмен жылжыту.
+  const shift = (i: number, dir: -1 | 1) => s.set((d) => {
+    const arr = d.fabrics as Fabric[]
+    const same = arr.map((f, j) => (f.kind === arr[i].kind ? j : -1)).filter((j) => j >= 0)
+    const j = same[same.indexOf(i) + dir]
+    if (j !== undefined) [arr[i], arr[j]] = [arr[j], arr[i]]
+  })
+  return (
+    <div className="page">
+      <ConnectCard />
+      <p className="note" style={{ margin: "0 4px" }}>Баға — бір метріне (₸). Әр матада кемінде бір сурет болсын: біріншісі сайтта басты сурет болып көрінеді. Сайтта «(05) Маталар» бөлімі.</p>
+      {KINDS.map((k) => {
+        const list = fs.map((f, i) => ({ f, i })).filter((x) => x.f.kind === k.key)
+        return (
+          <section key={k.key} className="fab-group">
+            <div className="card-h fab-head">
+              <h2>{k.title} · {list.length}</h2>
+              <button type="button" className="btn primary" onClick={() => s.set((d) => { (d.fabrics as Fabric[]).push({ kind: k.key, name: "", price: 0, note: "", photos: [] }) })}><Ico d={I.plus} />Мата қосу</button>
+            </div>
+            {!list.length && <div className="empty">Әзірге мата жоқ</div>}
+            {list.map(({ f, i }, n) => (
+              <article key={i} className="fab">
+                <div className="fab-top">
+                  <b>{f.name || "Атаусыз мата"}</b>
+                  <span className="price">{f.price ? `${fmtPrice(f.price)} ₸ / м` : "баға жоқ"}</span>
+                </div>
+                <div className="fab-photos">
+                  {f.photos.map((key, j) => (
+                    <figure key={key} className={`fab-ph${s.uploads[key] ? " new" : ""}`}>
+                      <img src={s.photoSrc(key)} alt="" loading="lazy" />
+                      {j === 0 && <span className="cover">Басты</span>}
+                      <span className="tile-actions">
+                        <IconBtn d={I.left} label="Алға жылжыту" onClick={() => ed(i, (x) => move(x.photos, j, -1))} disabled={j === 0} />
+                        <IconBtn d={I.right} label="Артқа жылжыту" onClick={() => ed(i, (x) => move(x.photos, j, 1))} disabled={j === f.photos.length - 1} />
+                        <IconBtn d={I.del} label="Суретті алып тастау" danger onClick={() => ed(i, (x) => { x.photos.splice(j, 1) })} />
+                      </span>
+                    </figure>
+                  ))}
+                  <AddPhotoTile onFiles={async (files) => { const keys = await s.addPhotos(files); if (keys.length) ed(i, (x) => { x.photos.push(...keys) }) }} />
+                </div>
+                <div className="fab-fields">
+                  <Field label="Атауы"><input value={f.name} onChange={(e) => ed(i, (x) => { x.name = e.target.value })} placeholder="Мысалы: Кашмир" /></Field>
+                  <Field label="Бағасы (1 метр)">
+                    <span className="price-in">
+                      <input inputMode="numeric" value={f.price ? String(f.price) : ""} onChange={(e) => ed(i, (x) => { x.price = Number(e.target.value.replace(/\D/g, "")) || 0 })} placeholder="9000" />
+                      <i>₸ / метр</i>
+                    </span>
+                  </Field>
+                  <div className="wide"><Field label="Қысқаша сипаттама"><input value={f.note} onChange={(e) => ed(i, (x) => { x.note = e.target.value })} placeholder="Мысалы: Жұмсақ, жарыққа қарай құбылады" /></Field></div>
+                </div>
+                <div className="fab-foot">
+                  <div className="seg" role="group" aria-label="Түрі">
+                    {KINDS.map((kk) => <button key={kk.key} type="button" aria-pressed={f.kind === kk.key} onClick={() => ed(i, (x) => { x.kind = kk.key })}>{kk.label}</button>)}
+                  </div>
+                  <div className="row-actions">
+                    <button type="button" className="more" onClick={() => setPick(i)}>Бар суреттен</button>
+                    <IconBtn d={I.up} label="Жоғары" onClick={() => shift(i, -1)} disabled={n === 0} />
+                    <IconBtn d={I.down} label="Төмен" onClick={() => shift(i, 1)} disabled={n === list.length - 1} />
+                    <IconBtn d={I.del} label="Матаны өшіру" danger onClick={() => { if (confirm(`«${f.name || "Атаусыз мата"}» матасын өшіресіз бе?`)) s.set((d) => { d.fabrics.splice(i, 1) }) }} />
+                  </div>
+                </div>
+              </article>
+            ))}
+          </section>
+        )
+      })}
+      {pick !== null && <PhotoPicker title="Матаға сурет қосу" onClose={() => setPick(null)} onPick={(key) => { ed(pick, (f) => { if (!f.photos.includes(key)) f.photos.push(key) }); setPick(null) }} />}
     </div>
   )
 }
